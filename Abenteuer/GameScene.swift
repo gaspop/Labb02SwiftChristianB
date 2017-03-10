@@ -11,92 +11,158 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    public let viewScreenShare : CGFloat = 0.45
+    public let maxViewSize : CGFloat = 1024
+    public var viewSize : CGFloat!
+    public var viewScale : CGFloat!
+    public var viewGap : CGFloat!
     
+    var gameView : GASGameView!
+    
+    var game : GASGame!
     var sceneFrame : SKShapeNode!
     
     //var sceneView : SKSpriteNode!
     
     override func didMove(to view: SKView) {
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+        game = GASGame()
         
-        // Draw Scene View
-        let sceneSize = size.height * 0.45
+        viewSize = size.height * viewScreenShare
+        viewScale = viewSize / maxViewSize
+        viewGap = (size.width - viewSize) / 2
+        
+        drawInterfaceGame()
+        //drawTest()
 
-        let sceneScale = sceneSize / 1024
-        print(sceneScale)
-        let sceneYPos = (self.size.height / 2) - (sceneSize / 2) - ((self.size.width - sceneSize) / 2)
-        sceneFrame = SKShapeNode(rectOf: CGSize(width: sceneSize, height: sceneSize))
-        sceneFrame.fillColor = UIColor.red
-        addChild(sceneFrame)
-        sceneFrame.position = CGPoint(x: 0, y: sceneYPos)
-        //sceneView = SKSpriteNode(color: UIColor.orange, size: sceneSize)
-        let sceneImage = GASSprite(sprite: SKSpriteNode(imageNamed: "Forest"), parent: sceneFrame)
-        sceneImage.width = sceneImage.width * sceneScale
-        sceneImage.height = sceneImage.height * sceneScale
-        print(sceneImage.width)
-        let test = SKSpriteNode(imageNamed: "Spaceship")
-        let gas : GASSprite = GASSprite(sprite: test, parent: sceneImage.sprite)
-        gas.position = CGPoint(x: sceneImage.width / 2, y: sceneImage.height - 32)
-        gas.width = gas.width * sceneScale
-        gas.height = gas.height * sceneScale
-        
-        
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(M_PI), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
     }
     
+    func drawInterfaceGame() {
+        gameView = GASGameView(game: game, parent: self, size: viewSize, scale: viewScale)
+        gameView.drawScene()
+        
+        let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
+        gameView.view.position = CGPoint(x: 0, y: sceneYPos)
+        
+        drawInterfacePlayerOptions(options: game.options!)
+
+    }
+    
+    var buttons : [GASButton] = []
+    
+    func drawInterfacePlayerOptions(options: [(String,String)]) {
+        if buttons.count > 0 {
+            NSLog("drawInterfacePlayerOptions: Removing old buttons.")
+            for b in buttons {
+                b.shape.removeFromParent()
+            }
+        }
+        buttons = []
+        
+        //let buttonAreaHeight = size.height - viewSize - (viewGap * 3)
+        let buttonHeight = 128 * viewScale
+        let buttonSize = CGSize(width: viewSize, height: buttonHeight)
+        let buttonGap = buttonHeight + (64 * viewScale)
+        let offsetY = (viewGap * 2) + viewSize
+        
+        for (index, tuple) in options.enumerated() {
+            let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
+            buttonShape.fillColor = UIColor.brown
+            buttonShape.strokeColor = UIColor.brown
+            let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
+            let button = GASButton(parent: self,
+                                   identifier: tuple.1,
+                                   size: buttonSize,
+                                   shape: buttonShape,
+                                   sprite: nil,
+                                   text: tuple.0,
+                                   textColor: nil,
+                                   font: buttonFont)
+            button.position(CGPoint(x: viewGap, y: offsetY + (buttonGap * CGFloat(index))))
+            buttons.append(button)
+        }
+        
+    }
+    
+    func drawTest() {
+        let buttonSide = 256 * viewScale
+        let buttonSize = CGSize(width: buttonSide, height: buttonSide)
+        let buttonImage = SKSpriteNode(imageNamed: "Garbage")
+        
+            let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
+            buttonShape.fillColor = UIColor.orange
+            buttonShape.strokeColor = UIColor.orange
+            let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
+            let button = GASButton(parent: self,
+                                   identifier: "test",
+                                   size: buttonSize,
+                                   shape: buttonShape,
+                                   sprite: buttonImage,
+                                   text: nil,
+                                   textColor: nil,
+                                   font: buttonFont)
+            button.position(CGPoint(x: (size.width / 2) - (buttonSide / 2) , y: size.height - buttonSide - viewGap))
+            
+    }
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.green
             self.addChild(n)
-        }
-        
-        //sceneView.removeFromParent()
+        }*/
+ 
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.blue
             self.addChild(n)
-        }
+        }*/
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.red
             self.addChild(n)
-        }
+        }*/
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
+        /*if let label = self.label {
             label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+        }*/
+        
+        for t in touches {
+            self.touchDown(atPoint: t.location(in: self))
+            
+            let touch:UITouch = touches.first! as UITouch
+            let positionInScene = touch.location(in: self)
+            let touchedNode = self.atPoint(positionInScene)
+            if let name = touchedNode.name
+            {
+                if name == "gameViewScene"
+                {
+                    game.newScene()
+                    gameView.drawScene()
+                    game.generateOptions()
+                    drawInterfacePlayerOptions(options: game.options!)
+                    //print("Touched")
+                } else {
+                    for b in buttons {
+                        if name == b.id! {
+                            print(b.text!)
+                        }
+                    }
+                }
+            }
+            
         }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

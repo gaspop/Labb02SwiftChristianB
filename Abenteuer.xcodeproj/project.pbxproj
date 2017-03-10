@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D251E71689900CBAF96 /* GASGameView.swift */; };
+		378D7D281E71942000CBAF96 /* GASButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D271E71942000CBAF96 /* GASButton.swift */; };
 		379C2D861E70623500774A54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C2D851E70623500774A54 /* AppDelegate.swift */; };
 		379C2D881E70623500774A54 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 379C2D871E70623500774A54 /* GameScene.sks */; };
 		379C2D8A1E70623500774A54 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 379C2D891E70623500774A54 /* Actions.sks */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		378D7D251E71689900CBAF96 /* GASGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGameView.swift; sourceTree = "<group>"; };
+		378D7D271E71942000CBAF96 /* GASButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASButton.swift; sourceTree = "<group>"; };
 		379C2D821E70623500774A54 /* Abenteuer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abenteuer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		379C2D851E70623500774A54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		379C2D871E70623500774A54 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -70,6 +74,8 @@
 				379C2D9D1E70867500774A54 /* GASGame.swift */,
 				379C2D9F1E70868F00774A54 /* GASScene.swift */,
 				379C2DA11E70875800774A54 /* GASSprite.swift */,
+				378D7D251E71689900CBAF96 /* GASGameView.swift */,
+				378D7D271E71942000CBAF96 /* GASButton.swift */,
 				379C2D8B1E70623500774A54 /* GameScene.swift */,
 				379C2D871E70623500774A54 /* GameScene.sks */,
 				379C2D891E70623500774A54 /* Actions.sks */,
@@ -158,11 +164,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				379C2D8C1E70623500774A54 /* GameScene.swift in Sources */,
+				378D7D281E71942000CBAF96 /* GASButton.swift in Sources */,
 				379C2D9E1E70867500774A54 /* GASGame.swift in Sources */,
 				379C2D8E1E70623500774A54 /* GameViewController.swift in Sources */,
 				379C2DA01E70868F00774A54 /* GASScene.swift in Sources */,
 				379C2DA21E70875800774A54 /* GASSprite.swift in Sources */,
 				379C2D861E70623500774A54 /* AppDelegate.swift in Sources */,
+				378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +332,7 @@
 				379C2D9C1E70623500774A54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

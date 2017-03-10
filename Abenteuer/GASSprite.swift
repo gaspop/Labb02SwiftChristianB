@@ -55,18 +55,18 @@ class GASSprite {
     
     var x : CGFloat {
         get {
-            return offsetX + sprite.position.x
+            return offsetX + (sprite.position.x / scale)
         }
         set(value) {
-            sprite.position.x = offsetX + value
+            sprite.position.x = offsetX + (value * scale)
         }
     }
     var y : CGFloat {
         get {
-            return offsetY + sprite.position.y
+            return offsetY + (sprite.position.y / scale)
         }
         set(value) {
-            sprite.position.y = offsetY - value
+            sprite.position.y = offsetY - (value * scale)
         }
     }
     var position : CGPoint {
@@ -78,11 +78,13 @@ class GASSprite {
             y = value.y
         }
     }
+    var scale : CGFloat
     
-    init(sprite: SKSpriteNode, parent: SKNode, name: String? = nil) {
+    init(sprite: SKSpriteNode, parent: SKNode, scale: CGFloat = 1.0, name: String? = nil) {
         self.sprite = sprite
         self.parent = parent
         self.sprite.zPosition = self.parent.zPosition + 1
+        self.scale = scale
         
         if name != nil {
             self.name = name
