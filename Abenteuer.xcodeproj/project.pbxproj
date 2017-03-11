@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		371A8CDF1E743972004FBB3E /* GASRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CDE1E743972004FBB3E /* GASRect.swift */; };
+		371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CDE1E743972004FBB3E /* GASRectangle.swift */; };
 		371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */; };
 		378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D251E71689900CBAF96 /* GASGameView.swift */; };
 		378D7D281E71942000CBAF96 /* GASButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D271E71942000CBAF96 /* GASButton.swift */; };
@@ -25,7 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		371A8CDE1E743972004FBB3E /* GASRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASRect.swift; sourceTree = "<group>"; };
+		371A8CDE1E743972004FBB3E /* GASRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASRectangle.swift; sourceTree = "<group>"; };
 		371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASNodeProtocol.swift; sourceTree = "<group>"; };
 		378D7D251E71689900CBAF96 /* GASGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGameView.swift; sourceTree = "<group>"; };
 		378D7D271E71942000CBAF96 /* GASButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASButton.swift; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 				379C2D941E70623500774A54 /* LaunchScreen.storyboard */,
 				379C2D971E70623500774A54 /* Info.plist */,
 				371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */,
-				371A8CDE1E743972004FBB3E /* GASRect.swift */,
+				371A8CDE1E743972004FBB3E /* GASRectangle.swift */,
 				379C2DA11E70875800774A54 /* GASSprite.swift */,
 			);
 			path = Abenteuer;
@@ -169,7 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				371A8CDF1E743972004FBB3E /* GASRect.swift in Sources */,
+				371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */,
 				379C2D8C1E70623500774A54 /* GameScene.swift in Sources */,
 				378D7D281E71942000CBAF96 /* GASButton.swift in Sources */,
 				371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */,

@@ -9,6 +9,10 @@
 import Foundation
 import SpriteKit
 
+enum GASNodePivot {
+    case topLeft, center, bottomCenter
+}
+
 protocol GASNode {
     
     var width : CGFloat { get set }
@@ -19,5 +23,7 @@ protocol GASNode {
     
     func position(_ x: CGFloat, _ y: CGFloat) -> Void
     func size(_ width: CGFloat, _ height: CGFloat) -> Void
+    
+    var pivotMode : GASNodePivot { get set }
     
 }

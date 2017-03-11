@@ -12,14 +12,14 @@ import SpriteKit
 class GASButton {
     
     var size : CGSize
-    var shape : SKShapeNode
-    var sprite : SKSpriteNode?
+    var shape : GASRectangle
+    var sprite : GASSprite?
     var text : String?
     var textColor : UIColor?
     var font : UIFont?
     var id : String?
     
-    init(parent: SKNode, identifier: String?, size: CGSize, shape: SKShapeNode, sprite: SKSpriteNode?, text: String?, textColor: UIColor?, font: UIFont?) {
+    init(parent: SKNode, identifier: String?, size: CGSize, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?) {
         self.size = size
         self.shape = shape
         parent.addChild(self.shape)
@@ -57,25 +57,22 @@ class GASButton {
         }
         
         if let identifier = identifier {
-            let touchShape = SKShapeNode(rectOf: self.size)
-            touchShape.fillColor = UIColor.clear
-            touchShape.strokeColor = UIColor.clear
-            touchShape.name = identifier
-            shape.addChild(touchShape)
+            let touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, name: identifier, parent: shape)
             touchShape.zPosition = touchShape.parent!.zPosition + 0.3
             self.id = identifier
         }
     }
     
-    func position(_ at: CGPoint) {
-        var parentSize : CGSize
+    func position(_ x: CGFloat, _ y: CGFloat) {
+        shape.position(x, y)
+/*        var parentSize : CGSize
         if let parent = shape.parent! as? SKScene {
             parentSize = parent.size
         } else {
             parentSize = CGSize(width: 0, height: 0)
         }
         shape.position = CGPoint(x: -(parentSize.width / 2) + (size.width / 2) + at.x,
-                                 y: (parentSize.height / 2) - (size.height / 2) - at.y)
+                                 y: (parentSize.height / 2) - (size.height / 2) - at.y)*/
     }
     
 }

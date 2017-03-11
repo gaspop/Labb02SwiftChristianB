@@ -14,20 +14,12 @@ class GASRectangle : SKShapeNode, GASNode {
     var cornerRadius : CGFloat
     private var size : CGSize
     
-    func size(_ width: CGFloat, _ height: CGFloat) {
-        self.size = CGSize(width: width, height: height)
-        let rectOrigin = CGPoint(x: -(width / 2), y: -(height / 2))
-        let rect = CGRect(origin: rectOrigin, size: size)
-        self.path = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
-    }
-    
     var width : CGFloat {
         get {
             return self.size.width
         }
         set(value) {
             self.size(value, height)
-            //self.size.width = value
         }
     }
     var height : CGFloat {
@@ -36,26 +28,57 @@ class GASRectangle : SKShapeNode, GASNode {
         }
         set(value) {
             self.size(width, value)
-            //self.size.height = value
+        }
+    }
+    
+    func size(_ width: CGFloat, _ height: CGFloat) {
+        self.size = CGSize(width: width, height: height)
+        let rectOrigin = CGPoint(x: -(width / 2), y: -(height / 2))
+        let rect = CGRect(origin: rectOrigin, size: size)
+        self.path = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
+    }
+    
+    private var _pivotMode : GASNodePivot = .topLeft
+    var pivotMode : GASNodePivot {
+        get {
+            return _pivotMode
+        }
+        set(value) {
+            _pivotMode = value
+            position(x,y)
         }
     }
     
     private var offsetX : CGFloat {
+        var x : CGFloat = 0
+        switch(pivotMode) {
+        case .topLeft:      x = (width / 2)
+        case .bottomCenter: x = 0
+        default:            x = 0
+        }
+        
         if let parent = self.parent as? SKScene {
-            return parent.size.width / 2
+            return -(parent.size.width / 2) + x
         } else if let parent = self.parent as? GASNode {
-            return parent.width / 2
+            return -(parent.width / 2) + x
         }else {
-            return (width / 2)
+            return x
         }
     }
     private var offsetY : CGFloat {
+        var y : CGFloat = 0
+        switch(pivotMode) {
+        case .topLeft:      y = -(height / 2)
+        case .bottomCenter: y = -(height / 2)
+        default:            y = 0
+        }
+        
         if let parent = self.parent as? SKScene {
-            return (parent.size.height / 2) - (height / 2)
+            return (parent.size.height / 2) + y
         } else if let parent = self.parent as? GASNode {
-            return (parent.height / 2) - (height / 2)
+            return (parent.height / 2) + y
         }else {
-            return -(height / 2)
+            return y
         }
     }
     
@@ -81,7 +104,7 @@ class GASRectangle : SKShapeNode, GASNode {
         self.y = y
     }
     
-    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, name: String?) {
+    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, name: String?, parent: SKNode?) {
         size = rectOf
         cornerRadius = radius
         super.init()
@@ -102,6 +125,12 @@ class GASRectangle : SKShapeNode, GASNode {
         if let name = name {
             self.name = name
         }
+        
+        if let parent = parent {
+            parent.addChild(self)
+        }
+        
+        self.position(0,0)
     }
     
     required init?(coder aDecoder: NSCoder) {

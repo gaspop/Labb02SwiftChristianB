@@ -34,9 +34,16 @@ class GameScene: SKScene {
         
         drawInterfaceGame()
         
+        /*
         let test = GASSprite(imageNamed: "Spaceship")
         addChild(test)
         test.position(0,0)
+        */
+        let test = GASRectangle(rectOf: CGSize(width: 256, height: 256), radius: 16, color: UIColor.green, name: nil, parent: self)
+        //addChild(test)
+        //test.pivotMode = .topLeft
+        //test.position(0,0)
+        test.zPosition = 1
         //test.x = 0
         //test.y = 0
         //drawTest()
@@ -72,9 +79,10 @@ class GameScene: SKScene {
         let offsetY = (viewGap * 2) + viewSize
         
         for (index, tuple) in options.enumerated() {
-            let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
-            buttonShape.fillColor = UIColor.brown
-            buttonShape.strokeColor = UIColor.brown
+            //let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
+            //buttonShape.fillColor = UIColor.brown
+            //buttonShape.strokeColor = UIColor.brown
+            let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.brown, name: nil, parent: nil)
             let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
             let button = GASButton(parent: self,
                                    identifier: tuple.1,
@@ -84,7 +92,7 @@ class GameScene: SKScene {
                                    text: tuple.0,
                                    textColor: nil,
                                    font: buttonFont)
-            button.position(CGPoint(x: viewGap, y: offsetY + (buttonGap * CGFloat(index))))
+            button.position(viewGap, offsetY + (buttonGap * CGFloat(index)))
             buttons.append(button)
         }
         
@@ -93,11 +101,12 @@ class GameScene: SKScene {
     func drawTest() {
         let buttonSide = 256 * viewScale
         let buttonSize = CGSize(width: buttonSide, height: buttonSide)
-        let buttonImage = SKSpriteNode(imageNamed: "Garbage")
+        let buttonImage = GASSprite(imageNamed: "Garbage")
         
-            let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
-            buttonShape.fillColor = UIColor.orange
-            buttonShape.strokeColor = UIColor.orange
+            //let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
+            //buttonShape.fillColor = UIColor.orange
+            //buttonShape.strokeColor = UIColor.orange
+        let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.orange, name: "test", parent: nil)
             let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
             let button = GASButton(parent: self,
                                    identifier: "test",
@@ -107,7 +116,7 @@ class GameScene: SKScene {
                                    text: nil,
                                    textColor: nil,
                                    font: buttonFont)
-            button.position(CGPoint(x: (size.width / 2) - (buttonSide / 2) , y: size.height - buttonSide - viewGap))
+            button.position((size.width / 2) - (buttonSide / 2), size.height - buttonSide - viewGap)
             
     }
     
