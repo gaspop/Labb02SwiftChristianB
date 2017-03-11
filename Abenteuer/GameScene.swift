@@ -33,7 +33,14 @@ class GameScene: SKScene {
         viewGap = (size.width - viewSize) / 2
         
         drawInterfaceGame()
+        
+        let test = GASSprite(imageNamed: "Spaceship")
+        addChild(test)
+        test.position(0,0)
+        //test.x = 0
+        //test.y = 0
         //drawTest()
+        
 
     }
     
@@ -45,7 +52,6 @@ class GameScene: SKScene {
         gameView.view.position = CGPoint(x: 0, y: sceneYPos)
         
         drawInterfacePlayerOptions(options: game.options!)
-
     }
     
     var buttons : [GASButton] = []

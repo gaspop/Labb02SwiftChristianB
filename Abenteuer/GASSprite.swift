@@ -9,80 +9,89 @@
 import Foundation
 import SpriteKit
 
-class GASSprite {
-    var sprite : SKSpriteNode
-    var parent : SKNode
-    var name : String? {
-        get {
-            return sprite.name
-        }
-        set(value) {
-            sprite.name = value
-        }
-    }
+class GASSprite : SKSpriteNode {
     
     var width : CGFloat {
         get {
-            return sprite.size.width
+            return self.size.width
         }
         set(value) {
-            sprite.size.width = value
+            self.size.width = value
         }
     }
     var height : CGFloat {
         get {
-            return sprite.size.height
+            return self.size.height
         }
         set(value) {
-            sprite.size.height = value
+            self.size.height = value
         }
     }
     
     private var offsetX : CGFloat {
         if let parent = self.parent as? SKSpriteNode {
-            return -(parent.size.width / 2)
-        } else {
-            return 0
+            return -(parent.size.width / 2) + (width / 2)
+        } else if let parent = self.parent as? SKScene {
+            return -(parent.size.width / 2) + (width / 2)
+        }else {
+            return (width / 2)
         }
     }
     private var offsetY : CGFloat {
         if let parent = self.parent as? SKSpriteNode {
-            return (parent.size.height / 2) + (height / 2)
-        } else {
-            return 0
+            return (parent.size.height / 2) - (height / 2)
+        } else if let parent = self.parent as? SKScene {
+            return (parent.size.height / 2) - (height / 2)
+        }else {
+            return -(height / 2)
         }
     }
     
     var x : CGFloat {
         get {
-            return offsetX + (sprite.position.x / scale)
+            return offsetX + self.position.x
         }
         set(value) {
-            sprite.position.x = offsetX + (value * scale)
+            self.position.x = offsetX + value
         }
     }
     var y : CGFloat {
         get {
-            return offsetY + (sprite.position.y / scale)
+            return offsetY + self.position.y
         }
         set(value) {
-            sprite.position.y = offsetY - (value * scale)
+            self.position.y = offsetY - value
         }
     }
-    var position : CGPoint {
+    /*
+    override var position : CGPoint {
         get {
             return CGPoint(x: x, y: y)
         }
-        set(value) {
-            x = value.x
-            y = value.y
+        didSet(value) {
+            self.position.x = 0
+            self.position.y = 0
+            //self.position = value
         }
     }
-    var scale : CGFloat
+    */
+    func position(_ x: CGFloat, _ y: CGFloat) {
+        self.x = x
+        self.y = y
+    }
     
-    init(sprite: SKSpriteNode, parent: SKNode, scale: CGFloat = 1.0, name: String? = nil) {
+/*
+    init(image: String) {
+        super.init(imageNamed: image)
+        //SKSpriteNode(imageNamed: )
+    }
+ */
+    
+    //var scale : CGFloat
+    
+    /*
+    init(sprite: SKSpriteNode, scale: CGFloat = 1.0, name: String? = nil) {
         self.sprite = sprite
-        self.parent = parent
         self.sprite.zPosition = self.parent.zPosition + 1
         self.scale = scale
         
@@ -93,4 +102,5 @@ class GASSprite {
         parent.addChild(self.sprite)
         position = CGPoint(x:0, y:0)
     }
+    */
 }
