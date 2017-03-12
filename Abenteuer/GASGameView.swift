@@ -11,43 +11,41 @@ import SpriteKit
 
 class GASGameView {
     
-    let size : CGFloat
+    let size : CGSize
     let scale : CGFloat
     
     var parent : SKNode
-    var view : SKShapeNode
+    var view : GASRectangle
     
     var game : GASGame!
     var scene : GASScene? {
         return game.scene
     }
     
-    var spriteScene: SKSpriteNode?
+    var spriteScene: GASSprite?
+    var monsters : [GASSprite] = []
     
-    var imageForScene : SKSpriteNode? {
-        var imageName : String
-        
+    var imageForScene : String? {
         switch(scene!.id) {
-        case GASScene.keyScene01: imageName = "Scene01"
-        case GASScene.keyScene02: imageName = "Scene02"
-        case GASScene.keyScene03: imageName = "Scene03"
-        case GASScene.keyScene04: imageName = "Scene04"
+        case GASScene.keyScene01: return "Scene01"
+        case GASScene.keyScene02: return "Scene02"
+        case GASScene.keyScene03: return "Scene03"
+        case GASScene.keyScene04: return "Test"
         default: NSLog("Error in GASGameView.imageForScene: missing case")
                  return nil
         }
-        return SKSpriteNode(imageNamed: imageName)
     }
     
     
-    init(game: GASGame, parent: SKNode, size: CGFloat, scale: CGFloat) {
+    init(game: GASGame, parent: SKNode, size: CGSize, scale: CGFloat) {
         self.game = game
         self.parent = parent
         self.size = size
         self.scale = scale
         
-        self.view = SKShapeNode(rectOf: CGSize(width: self.size, height: self.size))
-        self.view.strokeColor = UIColor.clear
-        self.parent.addChild(view)
+        self.view = GASRectangle(rectOf: size, radius: 0, color: nil, name: "poo", parent: self.parent)
+        //self.view.strokeColor = UIColor.clear
+        //self.parent.addChild(view)
     }
     
     func drawScene() {
@@ -56,20 +54,37 @@ class GASGameView {
                 NSLog("drawScene: Removing old node.")
                 spriteScene.removeFromParent()
             }
-            
-            if let image = imageForScene {
-                view.addChild(image)
-                image.scale(to: CGSize(width: size, height: size))
-                image.name = "gameViewScene"
-                image.position = CGPoint(x: 0, y: 0)
-                spriteScene = image
-                NSLog("drawScene: Adding new node.")
-            } else {
-                NSLog("Error in drawScene: No image found.")
-            }
+            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, name: "gameViewScene", parent: self.view)
+            NSLog("drawScene: Adding new node.")
+            drawMonsters()
         }
     }
     
-    
+    func drawMonsters() {
+        for m in monsters {
+            m.removeFromParent()
+        }
+        
+        monsters = []
+        if let scene = scene {
+            for m in scene.monsters {
+                let sprite = GASSprite(imageNamed: imageForMonster(m.type),
+                                       size: CGSize(width: CGFloat(m.geometry.width) * scale,
+                                                    height: CGFloat(m.geometry.height) * scale),
+                                       name: nil, parent: self.view)
+                sprite.pivotMode = .bottomCenter
+                sprite.position(CGFloat(m.geometry.x) * scale, 960 * scale)
+                sprite.zPosition = self.view.zPosition + 1.0
+                monsters.append(sprite)
+            }
+        }
+    }
 
+}
+
+func imageForMonster(_ type: GASMonsterType) -> String {
+    switch (type) {
+    case .hoodlum: return "Jerk"
+    default: return "Jerk"
+    }
 }

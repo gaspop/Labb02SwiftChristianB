@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class GASRectangle : SKShapeNode, GASNode {
+class GASRectangle : SKShapeNode, GASNodeProtocol {
 
     var cornerRadius : CGFloat
     private var size : CGSize
@@ -59,7 +59,7 @@ class GASRectangle : SKShapeNode, GASNode {
         
         if let parent = self.parent as? SKScene {
             return -(parent.size.width / 2) + x
-        } else if let parent = self.parent as? GASNode {
+        } else if let parent = self.parent as? GASNodeProtocol {
             return -(parent.width / 2) + x
         }else {
             return x
@@ -69,13 +69,13 @@ class GASRectangle : SKShapeNode, GASNode {
         var y : CGFloat = 0
         switch(pivotMode) {
         case .topLeft:      y = -(height / 2)
-        case .bottomCenter: y = -(height / 2)
+        case .bottomCenter: y = (height / 2)
         default:            y = 0
         }
         
         if let parent = self.parent as? SKScene {
             return (parent.size.height / 2) + y
-        } else if let parent = self.parent as? GASNode {
+        } else if let parent = self.parent as? GASNodeProtocol {
             return (parent.height / 2) + y
         }else {
             return y
@@ -122,6 +122,7 @@ class GASRectangle : SKShapeNode, GASNode {
         }
         self.lineWidth = 1
         self.glowWidth = 0
+        
         if let name = name {
             self.name = name
         }
@@ -129,8 +130,7 @@ class GASRectangle : SKShapeNode, GASNode {
         if let parent = parent {
             parent.addChild(self)
         }
-        
-        self.position(0,0)
+        position(0,0)
     }
     
     required init?(coder aDecoder: NSCoder) {

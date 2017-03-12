@@ -9,16 +9,6 @@
 import Foundation
 import SpriteKit
 
-func random(_ from: Int, _ to: Int) -> Int {
-    let value : Int = Int(arc4random_uniform(UInt32(to))) + from
-    NSLog("random: Range \(from) to \(to)   Result: \(value)")
-    return value
-}
-
-func random(_ to: Int) -> Int {
-    return random(0, to)
-}
-
 class GASScene {
     
     static let keyScene01 = "scene01"
@@ -28,7 +18,7 @@ class GASScene {
     
     var id : String
     var paths : [GameOption] = []
-    var monsters : [String] = []
+    var monsters : [GASMonster] = []
     var containers : [String] = []
     
     init(id : String) {
@@ -40,23 +30,20 @@ class GASScene {
     
     func generatePaths() {
         paths = []
-        var path : GameOption
-        switch (random(4)) {
-        case 0: path = .goNorth
-        case 1: path = .goEast
-        case 2: path = .goSouth
-        case 3: path = .goWest
-        default: path = .goNorth
+        if random(2)==1 {
+            paths.append(.travel)
         }
-        paths.append(path)
     }
     
     func generateMonsters() {
         monsters = []
-        let names = ["booger", "orc", "dragon", "evil cricket"]
-        for _ in 0...random(3) {
-            monsters.append(names[random(names.count)])
-            NSLog("Scene.generateMonsters: Adding '\(monsters[monsters.count - 1])'")
+        for i in 0..<(random(4)) {
+            let gap = 256
+            let monster = GASMonster(type: .hoodlum,
+                                     scene: self, game: nil, name: nil,
+                                     stats: GASUnitStats(health: 50, strength: 4, speed: 2),
+                                     geometry: GASSceneObjectGeometry(x: 256 + Float(gap * i), y: 0, width: 512, height: 768))
+            monsters.append(monster)
         }
     }
     

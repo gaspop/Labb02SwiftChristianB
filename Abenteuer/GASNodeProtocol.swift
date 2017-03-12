@@ -13,7 +13,7 @@ enum GASNodePivot {
     case topLeft, center, bottomCenter
 }
 
-protocol GASNode {
+protocol GASNodeProtocol {
     
     var width : CGFloat { get set }
     var height : CGFloat { get set }

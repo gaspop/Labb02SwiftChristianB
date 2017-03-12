@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CDE1E743972004FBB3E /* GASRectangle.swift */; };
 		371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */; };
+		371A8CE31E74B5A5004FBB3E /* GASHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE21E74B5A5004FBB3E /* GASHelper.swift */; };
+		371A8CE61E74B858004FBB3E /* GASSceneObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE51E74B858004FBB3E /* GASSceneObject.swift */; };
+		371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE71E74BAD1004FBB3E /* GASScenery.swift */; };
+		371A8CEA1E74C2F6004FBB3E /* GASContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE91E74C2F6004FBB3E /* GASContainer.swift */; };
+		371A8CEC1E74C3C9004FBB3E /* GASUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */; };
 		378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D251E71689900CBAF96 /* GASGameView.swift */; };
 		378D7D281E71942000CBAF96 /* GASButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378D7D271E71942000CBAF96 /* GASButton.swift */; };
 		379C2D861E70623500774A54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C2D851E70623500774A54 /* AppDelegate.swift */; };
@@ -27,6 +32,11 @@
 /* Begin PBXFileReference section */
 		371A8CDE1E743972004FBB3E /* GASRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASRectangle.swift; sourceTree = "<group>"; };
 		371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASNodeProtocol.swift; sourceTree = "<group>"; };
+		371A8CE21E74B5A5004FBB3E /* GASHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASHelper.swift; sourceTree = "<group>"; };
+		371A8CE51E74B858004FBB3E /* GASSceneObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASSceneObject.swift; sourceTree = "<group>"; };
+		371A8CE71E74BAD1004FBB3E /* GASScenery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASScenery.swift; sourceTree = "<group>"; };
+		371A8CE91E74C2F6004FBB3E /* GASContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASContainer.swift; sourceTree = "<group>"; };
+		371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASUnit.swift; sourceTree = "<group>"; };
 		378D7D251E71689900CBAF96 /* GASGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGameView.swift; sourceTree = "<group>"; };
 		378D7D271E71942000CBAF96 /* GASButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASButton.swift; sourceTree = "<group>"; };
 		379C2D821E70623500774A54 /* Abenteuer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abenteuer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +65,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		371A8CE41E74B82C004FBB3E /* SceneObjects */ = {
+			isa = PBXGroup;
+			children = (
+				371A8CE51E74B858004FBB3E /* GASSceneObject.swift */,
+				371A8CE71E74BAD1004FBB3E /* GASScenery.swift */,
+				371A8CE91E74C2F6004FBB3E /* GASContainer.swift */,
+				371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */,
+			);
+			name = SceneObjects;
+			sourceTree = "<group>";
+		};
 		379C2D791E70623500774A54 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +98,7 @@
 				379C2D851E70623500774A54 /* AppDelegate.swift */,
 				379C2D9D1E70867500774A54 /* GASGame.swift */,
 				379C2D9F1E70868F00774A54 /* GASScene.swift */,
+				371A8CE41E74B82C004FBB3E /* SceneObjects */,
 				378D7D251E71689900CBAF96 /* GASGameView.swift */,
 				378D7D271E71942000CBAF96 /* GASButton.swift */,
 				379C2D8B1E70623500774A54 /* GameScene.swift */,
@@ -90,6 +112,7 @@
 				371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */,
 				371A8CDE1E743972004FBB3E /* GASRectangle.swift */,
 				379C2DA11E70875800774A54 /* GASSprite.swift */,
+				371A8CE21E74B5A5004FBB3E /* GASHelper.swift */,
 			);
 			path = Abenteuer;
 			sourceTree = "<group>";
@@ -170,14 +193,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */,
+				371A8CEC1E74C3C9004FBB3E /* GASUnit.swift in Sources */,
+				371A8CE61E74B858004FBB3E /* GASSceneObject.swift in Sources */,
 				379C2D8C1E70623500774A54 /* GameScene.swift in Sources */,
+				371A8CE31E74B5A5004FBB3E /* GASHelper.swift in Sources */,
 				378D7D281E71942000CBAF96 /* GASButton.swift in Sources */,
 				371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */,
 				379C2D9E1E70867500774A54 /* GASGame.swift in Sources */,
+				371A8CEA1E74C2F6004FBB3E /* GASContainer.swift in Sources */,
 				379C2D8E1E70623500774A54 /* GameViewController.swift in Sources */,
 				379C2DA01E70868F00774A54 /* GASScene.swift in Sources */,
 				379C2DA21E70875800774A54 /* GASSprite.swift in Sources */,
 				379C2D861E70623500774A54 /* AppDelegate.swift in Sources */,
+				371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */,
 				378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

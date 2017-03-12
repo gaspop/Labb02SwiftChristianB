@@ -12,10 +12,7 @@ enum GameOption : Int {
     case attack = 0
     case search = 1
     case inventory = 2
-    case goNorth = 3
-    case goEast = 4
-    case goSouth = 5
-    case goWest = 6
+    case travel = 3
 }
 
 func stringForOption(_ option: GameOption) -> String {
@@ -23,10 +20,7 @@ func stringForOption(_ option: GameOption) -> String {
     case .attack:       return "Attack"
     case .search:       return "Search"
     case .inventory:    return "Check Inventory"
-    case .goNorth:      return "Go north"
-    case .goEast:       return "Go east"
-    case .goSouth:      return "Go south"
-    case .goWest:       return "Go west"
+    case .travel:         return "Travel onwards"
     }
 }
     
@@ -54,8 +48,8 @@ class GASGame {
         if let scene = self.scene {
             if scene.monsters.count > 0 {
                 switch(scene.monsters.count) {
-                case 1: options!.append(("\(stringForOption(.attack)) \(scene.monsters.first!)","option\(optionsCount)"))
-                default: options!.append(("\(stringForOption(.attack)) Monsters","option\(optionsCount)"))
+                case 1: options!.append(("\(stringForOption(.attack)) monster","option\(optionsCount)"))
+                default: options!.append(("\(stringForOption(.attack)) monsters","option\(optionsCount)"))
                 }
                 optionsCount += 1
             }

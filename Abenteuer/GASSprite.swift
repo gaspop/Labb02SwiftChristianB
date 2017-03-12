@@ -9,14 +9,14 @@
 import Foundation
 import SpriteKit
 
-class GASSprite : SKSpriteNode {
+class GASSprite : SKSpriteNode, GASNodeProtocol {
     
     var width : CGFloat {
         get {
             return self.size.width
         }
         set(value) {
-            self.size.width = value
+            self.size(value, height)
         }
     }
     var height : CGFloat {
@@ -24,26 +24,55 @@ class GASSprite : SKSpriteNode {
             return self.size.height
         }
         set(value) {
-            self.size.height = value
+            self.size(width, value)
+        }
+    }
+    
+    func size(_ width: CGFloat, _ height: CGFloat) {
+        self.size = CGSize(width: width, height: height)
+    }
+    
+    private var _pivotMode : GASNodePivot = .topLeft
+    var pivotMode : GASNodePivot {
+        get {
+            return _pivotMode
+        }
+        set(value) {
+            _pivotMode = value
+            position(x,y)
         }
     }
     
     private var offsetX : CGFloat {
-        if let parent = self.parent as? SKSpriteNode {
-            return -(parent.size.width / 2) + (width / 2)
-        } else if let parent = self.parent as? SKScene {
-            return -(parent.size.width / 2) + (width / 2)
+        var x : CGFloat = 0
+        switch(pivotMode) {
+        case .topLeft:      x = (width / 2)
+        case .bottomCenter: x = 0
+        default:            x = 0
+        }
+        
+        if let parent = self.parent as? SKScene {
+            return -(parent.size.width / 2) + x
+        } else if let parent = self.parent as? GASNodeProtocol {
+            return -(parent.width / 2) + x
         }else {
-            return (width / 2)
+            return x
         }
     }
     private var offsetY : CGFloat {
-        if let parent = self.parent as? SKSpriteNode {
-            return (parent.size.height / 2) - (height / 2)
-        } else if let parent = self.parent as? SKScene {
-            return (parent.size.height / 2) - (height / 2)
+        var y : CGFloat = 0
+        switch(pivotMode) {
+        case .topLeft:      y = -(height / 2)
+        case .bottomCenter: y = (height / 2)
+        default:            y = 0
+        }
+        
+        if let parent = self.parent as? SKScene {
+            return (parent.size.height / 2) + y
+        } else if let parent = self.parent as? GASNodeProtocol {
+            return (parent.height / 2) + y
         }else {
-            return -(height / 2)
+            return y
         }
     }
     
@@ -63,44 +92,34 @@ class GASSprite : SKSpriteNode {
             self.position.y = offsetY - value
         }
     }
-    /*
-    override var position : CGPoint {
-        get {
-            return CGPoint(x: x, y: y)
-        }
-        didSet(value) {
-            self.position.x = 0
-            self.position.y = 0
-            //self.position = value
-        }
-    }
-    */
+    
     func position(_ x: CGFloat, _ y: CGFloat) {
         self.x = x
         self.y = y
     }
-    
-/*
-    init(image: String) {
-        super.init(imageNamed: image)
-        //SKSpriteNode(imageNamed: )
-    }
- */
-    
-    //var scale : CGFloat
-    
-    /*
-    init(sprite: SKSpriteNode, scale: CGFloat = 1.0, name: String? = nil) {
-        self.sprite = sprite
-        self.sprite.zPosition = self.parent.zPosition + 1
-        self.scale = scale
+
+    init(imageNamed: String, size: CGSize?, name: String?, parent: SKNode?) {
+        let texture = SKTexture(imageNamed: imageNamed)
+        var useSize = texture.size()
+        if let size = size {
+            useSize = size
+        }
+        super.init(texture: texture, color: UIColor.clear, size: useSize)
         
-        if name != nil {
+        if let name = name {
             self.name = name
         }
         
-        parent.addChild(self.sprite)
-        position = CGPoint(x:0, y:0)
+        if let parent = parent {
+            parent.addChild(self)
+        }
+        position(0,0)
     }
-    */
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    
 }

@@ -39,20 +39,22 @@ class GameScene: SKScene {
         addChild(test)
         test.position(0,0)
         */
-        let test = GASRectangle(rectOf: CGSize(width: 256, height: 256), radius: 16, color: UIColor.green, name: nil, parent: self)
+        //let test = GASRectangle(rectOf: CGSize(width: 256, height: 256), radius: 16, color: UIColor.green, name: nil, parent: self)
         //addChild(test)
         //test.pivotMode = .topLeft
         //test.position(0,0)
-        test.zPosition = 1
+        //test.zPosition = 1
         //test.x = 0
         //test.y = 0
         //drawTest()
-        
 
     }
     
     func drawInterfaceGame() {
-        gameView = GASGameView(game: game, parent: self, size: viewSize, scale: viewScale)
+        gameView = GASGameView(game: game,
+                               parent: self,
+                               size: CGSize(width: viewSize, height: viewSize),
+                               scale: viewScale)
         gameView.drawScene()
         
         let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
@@ -101,7 +103,7 @@ class GameScene: SKScene {
     func drawTest() {
         let buttonSide = 256 * viewScale
         let buttonSize = CGSize(width: buttonSide, height: buttonSide)
-        let buttonImage = GASSprite(imageNamed: "Garbage")
+        let buttonImage = GASSprite(imageNamed: "Spaceship", size: nil, name: nil, parent: nil)
         
             //let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
             //buttonShape.fillColor = UIColor.orange
@@ -164,7 +166,7 @@ class GameScene: SKScene {
                     gameView.drawScene()
                     game.generateOptions()
                     drawInterfacePlayerOptions(options: game.options!)
-                    //print("Touched")
+                    print("Touched")
                 } else {
                     for b in buttons {
                         if name == b.id! {
