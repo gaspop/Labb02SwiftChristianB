@@ -40,9 +40,10 @@ class GASScene {
         for i in 0..<(random(4)) {
             let gap = 256
             let monster = GASMonster(type: .hoodlum,
-                                     scene: self, game: nil, name: nil,
-                                     stats: GASUnitStats(health: 50, strength: 4, speed: 2),
-                                     geometry: GASSceneObjectGeometry(x: 256 + Float(gap * i), y: 0, width: 512, height: 768))
+                                     scene: self, game: nil,
+                                     stats: GASUnitStats(health: 50, strength: 4, speed: 2, damage: 2),
+                                     geometry: GASSceneObjectGeometry(x: 256 + Float(gap * i), y: 0, width: 512, height: 768),
+                                     name: nil, weapon: GASWeapon.create(.wpnSword), armor: nil)
             monsters.append(monster)
         }
     }

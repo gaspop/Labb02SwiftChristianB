@@ -13,6 +13,8 @@ enum GASObjectType : Int {
     case container = 1
     case monster = 2
     case player = 3
+    //case item = 4
+
 }
 
 class GASSceneObjectGeometry {
@@ -45,6 +47,6 @@ protocol GASSceneObject {
 
 protocol GASInventory {
     
-    // var inventory : [GASItem]
+    var inventory : [GASItem] { get set }
     
 }

@@ -19,6 +19,8 @@ class GASContainer : GASSceneObject, GASInventory {
     
     var geometry : GASSceneObjectGeometry
     
+    var inventory : [GASItem] = []
+    
     init(type: GASContainerType, scene: GASScene, x: Float, y: Float, width : Float, height : Float) {
         self.type = type
         self.scene = scene
