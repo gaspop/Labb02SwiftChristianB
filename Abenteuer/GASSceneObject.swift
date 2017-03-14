@@ -12,7 +12,7 @@ enum GASObjectType : Int {
     case scenery = 0
     case container = 1
     case monster = 2
-    case player = 3
+    //case player = 3
     //case item = 4
 
 }
@@ -28,6 +28,13 @@ class GASSceneObjectGeometry {
         self.y = y
         self.width = width
         self.height = height
+    }
+    
+    init() {
+        self.x = 0
+        self.y = 0
+        self.width = 0
+        self.height = 0
     }
 }
 

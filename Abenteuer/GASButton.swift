@@ -17,9 +17,11 @@ class GASButton {
     var text : String?
     var textColor : UIColor?
     var font : UIFont?
-    var id : String?
+    //var id : String?
+    var option : GASGameOption?
+    var onTouchClosure : (() -> Void)?
     
-    init(parent: SKNode, identifier: String?, size: CGSize, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?) {
+    init(parent: SKNode, size: CGSize, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?, onTouch: (() -> Void)?) {
         self.size = size
         self.shape = shape
         parent.addChild(self.shape)
@@ -56,10 +58,10 @@ class GASButton {
             label.zPosition = label.parent!.zPosition + 0.2
         }
         
-        if let identifier = identifier {
-            let touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, name: identifier, parent: shape)
+        if let closure = onTouch {
+            self.onTouchClosure = closure
+            let touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, name: nil, parent: shape, onTouch: onTouchClosure)
             touchShape.zPosition = touchShape.parent!.zPosition + 0.3
-            self.id = identifier
         }
     }
     

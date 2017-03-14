@@ -10,7 +10,7 @@ import Foundation
 
 func random(_ from: Int, _ to: Int) -> Int {
     let value : Int = Int(arc4random_uniform(UInt32(to))) + from
-    NSLog("random: Range \(from) to \(to)   Result: \(value)")
+    //NSLog("random: Range \(from) to \(to)   Result: \(value)")
     return value
 }
 

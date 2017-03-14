@@ -11,6 +11,8 @@ import SpriteKit
 
 class GASSprite : SKSpriteNode, GASNodeProtocol {
     
+    var onTouchClosure : ((Void) -> Void)?
+    
     var width : CGFloat {
         get {
             return self.size.width
@@ -97,8 +99,14 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
         self.x = x
         self.y = y
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let closure = onTouchClosure {
+            closure()
+        }
+    }
 
-    init(imageNamed: String, size: CGSize?, name: String?, parent: SKNode?) {
+    init(imageNamed: String, size: CGSize?, name: String?, parent: SKNode?, onTouch: (() -> Void)?) {
         let texture = SKTexture(imageNamed: imageNamed)
         var useSize = texture.size()
         if let size = size {
@@ -114,6 +122,13 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
             parent.addChild(self)
         }
         position(0,0)
+        
+        if let closure = onTouch {
+            onTouchClosure = closure
+            isUserInteractionEnabled = true
+        } else {
+            isUserInteractionEnabled = false
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

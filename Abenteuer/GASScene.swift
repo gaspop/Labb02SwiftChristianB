@@ -16,12 +16,14 @@ class GASScene {
     static let keyScene03 = "scene03"
     static let keyScene04 = "scene04"
     
+    var game : GASGame
     var id : String
-    var paths : [GameOption] = []
+    var paths : [GASGameOptionType] = []
     var monsters : [GASMonster] = []
     var containers : [String] = []
     
-    init(id : String) {
+    init(game: GASGame, id : String) {
+        self.game = game
         self.id = id
         generatePaths()
         generateMonsters()
@@ -30,9 +32,7 @@ class GASScene {
     
     func generatePaths() {
         paths = []
-        if random(2)==1 {
-            paths.append(.travel)
-        }
+        paths.append(.travel)
     }
     
     func generateMonsters() {
@@ -40,10 +40,14 @@ class GASScene {
         for i in 0..<(random(4)) {
             let gap = 256
             let monster = GASMonster(type: .hoodlum,
-                                     scene: self, game: nil,
-                                     stats: GASUnitStats(health: 50, strength: 4, speed: 2, damage: 2),
+                                     scene: self, game: self.game,
+                                     stats: GASUnitStats(health: 50, strength: 2, speed: 2, damage: 2),
                                      geometry: GASSceneObjectGeometry(x: 256 + Float(gap * i), y: 0, width: 512, height: 768),
-                                     name: nil, weapon: GASWeapon.create(.wpnSword), armor: nil)
+                                     xpReward: 15,
+                                     name: nil,
+                                     weapon: GASWeapon.create(game: game, id: .wpnStick),
+                                     armor: nil,
+                                     inventory: nil)
             monsters.append(monster)
         }
     }

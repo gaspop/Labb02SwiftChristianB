@@ -14,10 +14,12 @@ class GASGameView {
     let size : CGSize
     let scale : CGFloat
     
-    var parent : SKNode
+    var parent : GameScene
     var view : GASRectangle
     
-    var game : GASGame!
+    var game : GASGame {
+        return parent.game
+    }
     var scene : GASScene? {
         return game.scene
     }
@@ -37,15 +39,12 @@ class GASGameView {
     }
     
     
-    init(game: GASGame, parent: SKNode, size: CGSize, scale: CGFloat) {
-        self.game = game
+    init(parent: GameScene, size: CGSize, scale: CGFloat) {
         self.parent = parent
         self.size = size
         self.scale = scale
         
-        self.view = GASRectangle(rectOf: size, radius: 0, color: nil, name: "poo", parent: self.parent)
-        //self.view.strokeColor = UIColor.clear
-        //self.parent.addChild(view)
+        self.view = GASRectangle(rectOf: size, radius: 0, color: nil, name: "poo", parent: self.parent, onTouch: nil)
     }
     
     func drawScene() {
@@ -54,7 +53,7 @@ class GASGameView {
                 NSLog("drawScene: Removing old node.")
                 spriteScene.removeFromParent()
             }
-            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, name: "gameViewScene", parent: self.view)
+            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, name: "gameViewScene", parent: self.view, onTouch: nil)
             NSLog("drawScene: Adding new node.")
             drawMonsters()
         }
@@ -68,14 +67,24 @@ class GASGameView {
         monsters = []
         if let scene = scene {
             for m in scene.monsters {
-                let sprite = GASSprite(imageNamed: imageForMonster(m.type),
-                                       size: CGSize(width: CGFloat(m.geometry.width) * scale,
-                                                    height: CGFloat(m.geometry.height) * scale),
-                                       name: nil, parent: self.view)
-                sprite.pivotMode = .bottomCenter
-                sprite.position(CGFloat(m.geometry.x) * scale, 960 * scale)
-                sprite.zPosition = self.view.zPosition + 1.0
-                monsters.append(sprite)
+                if m.isAlive {
+                    var closure : (() -> Void)? = nil
+                    closure = {
+                        if let battle = self.game.battle,
+                           let unit = battle.turnList.first,
+                           unit.id == GASGame.playerId {
+                            battle.setTarget(forUnit: unit, target: m)
+                        }
+                    }
+                    let sprite = GASSprite(imageNamed: imageForMonster(m.type),
+                                           size: CGSize(width: CGFloat(m.geometry.width) * scale,
+                                                        height: CGFloat(m.geometry.height) * scale),
+                                           name: nil, parent: self.view, onTouch: closure)
+                    sprite.pivotMode = .bottomCenter
+                    sprite.position(CGFloat(m.geometry.x) * scale, 960 * scale)
+                    sprite.zPosition = self.view.zPosition + 1.0
+                    monsters.append(sprite)
+                }
             }
         }
     }

@@ -18,12 +18,16 @@ enum GASItemType : Int {
 protocol GASItem {
     
     static var itemType : GASItemType { get }
-    var itemId : GASItemId { get }
+    
+    var game : GASGame { get }
+    var typeId : GASItemTypeId { get }
+    var id : Int { get }
+    
     var value : Int { get set }
     
 }
 
-enum GASItemId : Int {
+enum GASItemTypeId : Int {
     case wpnStick           = 1
     case wpnBat             = 2
     case wpnSword           = 3

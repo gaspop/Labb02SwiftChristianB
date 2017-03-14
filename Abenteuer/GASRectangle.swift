@@ -11,6 +11,7 @@ import SpriteKit
 
 class GASRectangle : SKShapeNode, GASNodeProtocol {
 
+    var onTouchClosure : ((Void) -> Void)?
     var cornerRadius : CGFloat
     private var size : CGSize
     
@@ -104,7 +105,13 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
         self.y = y
     }
     
-    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, name: String?, parent: SKNode?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let closure = onTouchClosure {
+            closure()
+        }
+    }
+    
+    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, name: String?, parent: SKNode?, onTouch: (() -> Void)?) {
         size = rectOf
         cornerRadius = radius
         super.init()
@@ -120,7 +127,7 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
             self.fillColor = UIColor.white
             self.strokeColor = UIColor.white
         }
-        self.lineWidth = 1
+        self.lineWidth = 0
         self.glowWidth = 0
         
         if let name = name {
@@ -131,6 +138,14 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
             parent.addChild(self)
         }
         position(0,0)
+        
+        if let closure = onTouch {
+            onTouchClosure = closure
+            isUserInteractionEnabled = true
+        } else {
+            isUserInteractionEnabled = false
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

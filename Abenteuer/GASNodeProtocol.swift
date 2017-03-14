@@ -26,4 +26,6 @@ protocol GASNodeProtocol {
     
     var pivotMode : GASNodePivot { get set }
     
+    var onTouchClosure : ((Void) -> Void)? { get set }
+    
 }

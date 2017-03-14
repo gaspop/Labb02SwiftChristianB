@@ -28,9 +28,10 @@ class GASUnitStats {
 }
 
 
-protocol GASUnit {
+protocol GASUnit : CustomStringConvertible {
     
-    var game : GASGame? { get set }
+    var game : GASGame { get set }
+    var id : Int { get }
     
     var name : String? { get set }
     var stats : GASUnitStats { get set }
@@ -39,6 +40,8 @@ protocol GASUnit {
     var armor : GASArmor? { get set }
     
     var isAlive : Bool { get }
+    
+    var target : GASUnit? { get set }
     
     func attack(_ target: GASUnit)
     func takeDamage(_ amount: Int)

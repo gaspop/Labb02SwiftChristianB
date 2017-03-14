@@ -9,6 +9,11 @@
 import SpriteKit
 import GameplayKit
 
+enum GameInterfaceAction {
+    case normal
+    case selectNewTarget
+}
+
 class GameScene: SKScene {
     
     public let viewScreenShare : CGFloat = 0.45
@@ -27,12 +32,23 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         game = GASGame()
+        game.player = GASPlayer(game: game,
+                                name: "Ture",
+                                stats: GASUnitStats(health: 200, strength: 1, speed: 3, damage: 1),
+                                geometry: GASSceneObjectGeometry())
+        game.player!.weapon = GASWeapon.create(game: game, id: .wpnPistol)
+        game.player!.armor = GASArmor.create(game: game, id: .armShieldSteel)
+        game.newScene()
+        game.newBattle()
+        game.evaluateBattle()
+        game.generateOptions()
         
         viewSize = size.height * viewScreenShare
         viewScale = viewSize / maxViewSize
         viewGap = (size.width - viewSize) / 2
         
         drawInterfaceGame()
+        drawInterfacePlayerOptions(options: game.options)
         
         /*
         let test = GASSprite(imageNamed: "Spaceship")
@@ -47,12 +63,10 @@ class GameScene: SKScene {
         //test.x = 0
         //test.y = 0
         //drawTest()
-
     }
     
     func drawInterfaceGame() {
-        gameView = GASGameView(game: game,
-                               parent: self,
+        gameView = GASGameView(parent: self,
                                size: CGSize(width: viewSize, height: viewSize),
                                scale: viewScale)
         gameView.drawScene()
@@ -60,14 +74,14 @@ class GameScene: SKScene {
         let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
         gameView.view.position = CGPoint(x: 0, y: sceneYPos)
         
-        drawInterfacePlayerOptions(options: game.options!)
+        drawInterfacePlayerOptions(options: game.options)
     }
     
     var buttons : [GASButton] = []
     
-    func drawInterfacePlayerOptions(options: [(String,String)]) {
+    func drawInterfacePlayerOptions(options: [GASGameOption]?) {
         if buttons.count > 0 {
-            NSLog("drawInterfacePlayerOptions: Removing old buttons.")
+            //NSLog("drawInterfacePlayerOptions: Removing old buttons.")
             for b in buttons {
                 b.shape.removeFromParent()
             }
@@ -80,27 +94,52 @@ class GameScene: SKScene {
         let buttonGap = buttonHeight + (64 * viewScale)
         let offsetY = (viewGap * 2) + viewSize
         
-        for (index, tuple) in options.enumerated() {
-            //let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
-            //buttonShape.fillColor = UIColor.brown
-            //buttonShape.strokeColor = UIColor.brown
-            let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.brown, name: nil, parent: nil)
-            let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
-            let button = GASButton(parent: self,
-                                   identifier: tuple.1,
-                                   size: buttonSize,
-                                   shape: buttonShape,
-                                   sprite: nil,
-                                   text: tuple.0,
-                                   textColor: nil,
-                                   font: buttonFont)
-            button.position(viewGap, offsetY + (buttonGap * CGFloat(index)))
-            buttons.append(button)
+        if let options = options {
+            for (index,o) in options.enumerated() {
+                let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.brown,
+                                               name: nil, parent: nil, onTouch: nil)
+                let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
+                let button = GASButton(parent: self,
+                                       size: buttonSize,
+                                       shape: buttonShape,
+                                       sprite: nil,
+                                       text: o.text,
+                                       textColor: nil,
+                                       font: buttonFont,
+                                       onTouch: actionForOption(o.type))
+                button.position(viewGap, offsetY + (buttonGap * CGFloat(index)))
+                buttons.append(button)
+            }
         }
         
     }
     
-    func drawTest() {
+    func actionForOption(_ type: GASGameOptionType) -> (() -> Void)? {
+        switch(type) {
+        case .attack:       return {
+            self.game.continueBattle()
+            self.gameView.drawMonsters()
+            self.drawInterfacePlayerOptions(options: self.game.options)
+            }
+        case .continue:     return {
+            self.game.continueBattle()
+            self.gameView.drawMonsters()
+            self.drawInterfacePlayerOptions(options: self.game.options)
+            }
+        case .travel:       return {
+            self.game.newScene()
+            self.game.newBattle()
+            self.game.evaluateBattle()
+            self.game.generateOptions()
+            self.gameView.drawScene()
+            self.drawInterfacePlayerOptions(options: self.game.options!)
+            }
+        default:
+            return nil
+        }
+    }
+    
+    /*func drawTest() {
         let buttonSide = 256 * viewScale
         let buttonSize = CGSize(width: buttonSide, height: buttonSide)
         let buttonImage = GASSprite(imageNamed: "Spaceship", size: nil, name: nil, parent: nil)
@@ -120,7 +159,7 @@ class GameScene: SKScene {
                                    font: buttonFont)
             button.position((size.width / 2) - (buttonSide / 2), size.height - buttonSide - viewGap)
             
-    }
+    }*/
     
     func touchDown(atPoint pos : CGPoint) {
         /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
@@ -155,26 +194,32 @@ class GameScene: SKScene {
         for t in touches {
             self.touchDown(atPoint: t.location(in: self))
             
-            let touch:UITouch = touches.first! as UITouch
-            let positionInScene = touch.location(in: self)
-            let touchedNode = self.atPoint(positionInScene)
-            if let name = touchedNode.name
+            //let touch:UITouch = touches.first! as UITouch
+            //let positionInScene = touch.location(in: self)
+            //let touchedNode = self.atPoint(positionInScene)
+          /*  if let name = touchedNode.name
             {
                 if name == "gameViewScene"
                 {
                     game.newScene()
                     gameView.drawScene()
                     game.generateOptions()
+                    game.newBattle()
                     drawInterfacePlayerOptions(options: game.options!)
                     print("Touched")
                 } else {
                     for b in buttons {
-                        if name == b.id! {
-                            print(b.text!)
-                        }
+                        if let option = b.option {
+                            if name == option.text && (option.type == .attack || option.type == .continue) {
+                                print("RÖV")
+                                game.evaluateBattle()
+                            }
+                        } //else if name == b.id! {
+                          //  print(b.text!)
+                       // }
                     }
                 }
-            }
+            }*/
             
         }
         

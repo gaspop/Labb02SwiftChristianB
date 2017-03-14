@@ -14,35 +14,42 @@ class GASWeapon : GASItem {
         return .weapon
     }
     
-    private(set) var itemId : GASItemId
+    var game : GASGame
+    private(set) var typeId : GASItemTypeId
+    var id : Int
     var value : Int
     
     var damageMin : Int
     var damageMax : Int
     
-    init(itemId: GASItemId, value: Int, damageMin: Int, damageMax: Int) {
-        self.itemId = itemId
+    init(game: GASGame, typeId: GASItemTypeId, value: Int, damageMin: Int, damageMax: Int) {
+        self.game = game
+        self.typeId = typeId
         self.value = value
         self.damageMin = damageMin
         self.damageMax = damageMax
+        
+        self.game.itemCount += 1
+        self.id = game.itemCount
+        //NSLog("GASWeapon.init: New item with id \(id).")
     }
     
-    static func create(_ id: GASItemId) -> GASWeapon? {
+    static func create(game: GASGame, id: GASItemTypeId) -> GASWeapon? {
         switch(id) {
         case .wpnStick:
-            return GASWeapon(itemId: id, value: 1, damageMin: 1, damageMax: 2)
+            return GASWeapon(game: game, typeId: id, value: 1, damageMin: 1, damageMax: 2)
             
         case .wpnBat:
-            return GASWeapon(itemId: id, value: 5, damageMin: 2, damageMax: 4)
+            return GASWeapon(game: game, typeId: id, value: 5, damageMin: 2, damageMax: 4)
             
         case .wpnSword:
-            return GASWeapon(itemId: id, value: 10, damageMin: 4, damageMax: 6)
+            return GASWeapon(game: game, typeId: id, value: 10, damageMin: 4, damageMax: 6)
             
         case .wpnAxe:
-            return GASWeapon(itemId: id, value: 14, damageMin: 5, damageMax: 7)
+            return GASWeapon(game: game, typeId: id, value: 14, damageMin: 5, damageMax: 7)
             
         case .wpnPistol:
-            return GASWeapon(itemId: id, value: 20, damageMin: 10, damageMax: 15)
+            return GASWeapon(game: game, typeId: id, value: 20, damageMin: 10, damageMax: 15)
             
         default: return nil
         }
