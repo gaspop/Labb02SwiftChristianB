@@ -34,7 +34,7 @@ class GASWeapon : GASItem {
         //NSLog("GASWeapon.init: New item with id \(id).")
     }
     
-    static func create(game: GASGame, id: GASItemTypeId) -> GASWeapon? {
+    static func create(game: GASGame, id: GASItemTypeId) -> GASWeapon {
         switch(id) {
         case .wpnStick:
             return GASWeapon(game: game, typeId: id, value: 1, damageMin: 1, damageMax: 2)
@@ -51,7 +51,8 @@ class GASWeapon : GASItem {
         case .wpnPistol:
             return GASWeapon(game: game, typeId: id, value: 20, damageMin: 10, damageMax: 15)
             
-        default: return nil
+        default:
+            return GASWeapon(game: game, typeId: .wpnStick, value: 0, damageMin: 0, damageMax: 0)
         }
     }
 

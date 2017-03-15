@@ -14,6 +14,7 @@
 		371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE71E74BAD1004FBB3E /* GASScenery.swift */; };
 		371A8CEA1E74C2F6004FBB3E /* GASContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE91E74C2F6004FBB3E /* GASContainer.swift */; };
 		371A8CEC1E74C3C9004FBB3E /* GASUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */; };
+		37683D4F1E79863300A8F431 /* GASInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37683D4E1E79863300A8F431 /* GASInventoryView.swift */; };
 		3786B1AA1E756F230021A2FB /* GASMonster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3786B1A91E756F230021A2FB /* GASMonster.swift */; };
 		3786B1AC1E756FFE0021A2FB /* GASPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */; };
 		3786B1AE1E757C810021A2FB /* GASItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3786B1AD1E757C810021A2FB /* GASItem.swift */; };
@@ -43,6 +44,7 @@
 		371A8CE71E74BAD1004FBB3E /* GASScenery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASScenery.swift; sourceTree = "<group>"; };
 		371A8CE91E74C2F6004FBB3E /* GASContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASContainer.swift; sourceTree = "<group>"; };
 		371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASUnit.swift; sourceTree = "<group>"; };
+		37683D4E1E79863300A8F431 /* GASInventoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASInventoryView.swift; sourceTree = "<group>"; };
 		3786B1A91E756F230021A2FB /* GASMonster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASMonster.swift; sourceTree = "<group>"; };
 		3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASPlayer.swift; sourceTree = "<group>"; };
 		3786B1AD1E757C810021A2FB /* GASItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASItem.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				3786B1B31E75D6350021A2FB /* GASBattle.swift */,
 				371A8CE41E74B82C004FBB3E /* SceneObjects */,
 				378D7D251E71689900CBAF96 /* GASGameView.swift */,
+				37683D4E1E79863300A8F431 /* GASInventoryView.swift */,
 				378D7D271E71942000CBAF96 /* GASButton.swift */,
 				379C2D8B1E70623500774A54 /* GameScene.swift */,
 				379C2D871E70623500774A54 /* GameScene.sks */,
@@ -227,6 +230,7 @@
 				3786B1B21E75959D0021A2FB /* GASArmor.swift in Sources */,
 				379C2DA01E70868F00774A54 /* GASScene.swift in Sources */,
 				379C2DA21E70875800774A54 /* GASSprite.swift in Sources */,
+				37683D4F1E79863300A8F431 /* GASInventoryView.swift in Sources */,
 				379C2D861E70623500774A54 /* AppDelegate.swift in Sources */,
 				371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */,
 				3786B1AA1E756F230021A2FB /* GASMonster.swift in Sources */,

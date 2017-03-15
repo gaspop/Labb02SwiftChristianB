@@ -14,7 +14,7 @@ class GASGameView {
     let size : CGSize
     let scale : CGFloat
     
-    var parent : GameScene
+    let parent : GameScene
     var view : GASRectangle
     
     var game : GASGame {

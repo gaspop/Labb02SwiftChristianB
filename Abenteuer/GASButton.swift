@@ -21,11 +21,12 @@ class GASButton {
     var option : GASGameOption?
     var onTouchClosure : (() -> Void)?
     
-    init(parent: SKNode, size: CGSize, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?, onTouch: (() -> Void)?) {
-        self.size = size
+    init(parent: SKNode, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?, onTouch: (() -> Void)?) {
         self.shape = shape
+        self.size = CGSize(width: shape.frame.width, height: shape.frame.height)
         parent.addChild(self.shape)
         self.shape.zPosition = parent.zPosition + 0.1
+
         
         if let sprite = sprite {
             let maxLength = max(sprite.size.width, sprite.size.height)
@@ -63,6 +64,7 @@ class GASButton {
             let touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, name: nil, parent: shape, onTouch: onTouchClosure)
             touchShape.zPosition = touchShape.parent!.zPosition + 0.3
         }
+
     }
     
     func position(_ x: CGFloat, _ y: CGFloat) {
@@ -75,6 +77,10 @@ class GASButton {
         }
         shape.position = CGPoint(x: -(parentSize.width / 2) + (size.width / 2) + at.x,
                                  y: (parentSize.height / 2) - (size.height / 2) - at.y)*/
+    }
+    
+    func clear() {
+        self.shape.removeFromParent()
     }
     
 }

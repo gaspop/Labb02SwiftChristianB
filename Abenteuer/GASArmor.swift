@@ -34,7 +34,7 @@ class GASArmor : GASItem {
         //NSLog("GASArmor.init: New item with id \(id).")
     }
     
-    static func create(game: GASGame, id: GASItemTypeId)-> GASArmor? {
+    static func create(game: GASGame, id: GASItemTypeId)-> GASArmor {
         switch(id) {
         case .armShieldWooden:
             return GASArmor(game: game, typeId: id, value: 5, damageBlock: 1, damageAbsorb: 10.0)
@@ -45,7 +45,8 @@ class GASArmor : GASItem {
         case .armShieldSteel:
             return GASArmor(game: game, typeId: id, value: 20, damageBlock: 4, damageAbsorb: 20.0)
             
-        default: return nil
+        default:
+            return GASArmor(game: game, typeId: .armShieldWooden, value: 0, damageBlock: 0, damageAbsorb: 0.0)
         }
     }
     
