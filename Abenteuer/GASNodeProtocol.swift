@@ -9,10 +9,13 @@
 import Foundation
 import SpriteKit
 
-enum GASNodePivot {
-    case topLeft, center, bottomCenter
+class GASNodePivot {
+    static var topLeft : CGPoint        { return CGPoint(x: 0.0, y: 1.0) }
+    static var center : CGPoint         { return CGPoint(x: 0.5, y: 0.5) }
+    static var bottomCenter : CGPoint   { return CGPoint(x: 0.5, y: 0.0) }
 }
 
+/*
 protocol GASNodeProtocol {
     
     var width : CGFloat { get set }
@@ -22,10 +25,9 @@ protocol GASNodeProtocol {
     var y : CGFloat { get set }
     
     func position(_ x: CGFloat, _ y: CGFloat) -> Void
-    func size(_ width: CGFloat, _ height: CGFloat) -> Void
-    
-    var pivotMode : GASNodePivot { get set }
+    //func size(_ width: CGFloat, _ height: CGFloat) -> Void
     
     var onTouchClosure : ((Void) -> Void)? { get set }
     
 }
+*/

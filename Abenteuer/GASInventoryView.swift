@@ -21,6 +21,15 @@ class GASItemView {
     var item : GASItem
     var image : GASSprite
     
+    var position : CGPoint {
+        get {
+            return image.position
+        }
+        set(value) {
+            image.position = value
+        }
+    }
+    
     init(parent: GASInventoryView, item: GASItem, image: GASSprite, size: CGSize, scale: CGFloat) {
         self.parent = parent
         self.item = item
@@ -51,12 +60,21 @@ class GASInventoryView {
     }
     var selected : GASItem?
     
-    var view : GASRectangle
+    private let view : GASRectangle
     let overlay : GASRectangle?
     var itemSlots : [GASSprite]
     var itemViews : [GASItemView]
     
     var onItemTouchClosure : (GASItem) -> Void
+    
+    var position : CGPoint {
+        get {
+            return view.position
+        }
+        set(value) {
+            view.position = value
+        }
+    }
     
     func draw() {
         for row in 0 ..< rows {
@@ -64,7 +82,9 @@ class GASInventoryView {
                 let slot = GASSprite(imageNamed: "inventorySlot",
                                      size: CGSize(width: itemSize, height: itemSize),
                                      parent: self.view, onTouch: nil)
-                slot.position(itemSize * CGFloat(col), itemSize * CGFloat(row))
+                slot.anchorPoint = GASNodePivot.center
+                slot.position = CGPoint(x: (itemSize / 2) + itemSize * CGFloat(col),
+                                        y: (itemSize / 2) + itemSize * CGFloat(row))
                 slot.zRotation = CGFloat(90 * random(4)) * 3.14 / 180
                 slot.zPosition = self.parent.zPosition + 0.1
                 itemSlots.append(slot)
@@ -85,7 +105,7 @@ class GASInventoryView {
                                                                 size: CGSize(width: itemSize, height: itemSize),
                                                                 parent: self.view, onTouch: nil),
                                                size: CGSize(width: itemSize, height: itemSize), scale: self.scale)
-                    itemView.image.position(itemSize * CGFloat(col), itemSize * CGFloat(row))
+                    itemView.image.setPosition(itemSize * CGFloat(col), itemSize * CGFloat(row))
                     itemView.image.zPosition = self.parent.zPosition + 0.2
                     itemViews.append(itemView)
                     //nodes.append(itemView.image)

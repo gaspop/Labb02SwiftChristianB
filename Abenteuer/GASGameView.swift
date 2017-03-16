@@ -15,7 +15,16 @@ class GASGameView {
     let scale : CGFloat
     
     let parent : GameScene
-    var view : GASRectangle
+    private let view : GASRectangle
+    
+    var position : CGPoint {
+        get {
+            return view.position
+        }
+        set(value) {
+            view.position = value
+        }
+    }
     
     var game : GASGame {
         return parent.game
@@ -24,8 +33,8 @@ class GASGameView {
         return game.scene
     }
     
-    var spriteScene: GASSprite?
-    var monsters : [GASSprite] = []
+    var sceneSprite: GASSprite?
+    var monsterSprites : [GASSprite] = []
     
     var imageForScene : String? {
         switch(scene!.id) {
@@ -49,22 +58,21 @@ class GASGameView {
     
     func drawScene() {
         if let _ = self.scene {
-            if let spriteScene = self.spriteScene {
+            if let sceneSprite = self.sceneSprite {
                 // NSLog("drawScene: Removing old node.")
-                spriteScene.removeFromParent()
+                sceneSprite.removeFromParent()
             }
-            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, parent: self.view, onTouch: nil)
-            //NSLog("drawScene: Adding new node.")
+            sceneSprite = GASSprite(imageNamed: imageForScene!, size: self.size, parent: self.view, onTouch: nil)
             drawMonsters()
         }
     }
     
     func drawMonsters() {
-        for m in monsters {
+        for m in monsterSprites {
             m.removeFromParent()
         }
         
-        monsters = []
+        monsterSprites = []
         if let scene = scene {
             for m in scene.monsters {
                 if m.isAlive {
@@ -80,23 +88,22 @@ class GASGameView {
                                            size: CGSize(width: CGFloat(m.geometry.width) * scale,
                                                         height: CGFloat(m.geometry.height) * scale),
                                            parent: self.view, onTouch: closure)
-                    //sprite.pivotMode = .bottomCenter
-                    //sprite.anchorPoint = CGPoint(x: 0.5, y: 1.0)
-                    sprite.position(CGFloat(m.geometry.x) * scale, 960 * scale)
+
+                    sprite.setPosition(CGFloat(m.geometry.x) * scale, 960 * scale)
                     sprite.zPosition = self.view.zPosition + 1.0
                     sprite.anchorPoint = CGPoint(x: 0.5, y: 0.0)
-                    print("anchor: \(sprite.anchorPoint)")
+                    //print("anchor: \(sprite.anchorPoint)")
                     
                     
-                    let action1 = SKAction.scaleY(to: 1.1, duration: 0.5)
-                    let action2 = SKAction.scaleY(to: 0.9, duration: 0.5)
+                    let action1 = SKAction.scaleY(to: 1.05, duration: 0.25)
+                    let action2 = SKAction.scaleY(to: 0.95, duration: 0.25)
                     
                     func temp() {
                         sprite.run(action1, completion: { sprite.run(action2, completion: { temp() } ) } )
                     }
                     temp()
                     
-                    monsters.append(sprite)
+                    monsterSprites.append(sprite)
                 }
             }
         }

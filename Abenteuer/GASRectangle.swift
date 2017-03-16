@@ -9,47 +9,33 @@
 import UIKit
 import SpriteKit
 
-class GASRectangle : SKShapeNode, GASNodeProtocol {
+class GASRectangle : SKShapeNode {
 
     var onTouchClosure : ((Void) -> Void)?
-    var cornerRadius : CGFloat
-    private var size : CGSize
+    let cornerRadius : CGFloat
+    
+    let size : CGSize
     
     var width : CGFloat {
         get {
             return self.size.width
-        }
-        set(value) {
-            self.size(value, height)
         }
     }
     var height : CGFloat {
         get {
             return self.size.height
         }
-        set(value) {
-            self.size(width, value)
-        }
     }
     
+    /*
     func size(_ width: CGFloat, _ height: CGFloat) {
         self.size = CGSize(width: width, height: height)
         let rectOrigin = CGPoint(x: -(width / 2), y: -(height / 2))
         let rect = CGRect(origin: rectOrigin, size: size)
         self.path = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
-    }
+    }*/
     
-    private var _pivotMode : GASNodePivot = .topLeft
-    var pivotMode : GASNodePivot {
-        get {
-            return _pivotMode
-        }
-        set(value) {
-            _pivotMode = value
-            position(x,y)
-        }
-    }
-    
+    /*
     private var offsetX : CGFloat {
         var x : CGFloat = 0
         switch(pivotMode) {
@@ -82,25 +68,58 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
             return y
         }
     }
+    */
+    
+    private var lastOriginX : CGFloat = 0.0
+    private var lastOriginY : CGFloat = 0.0
+    private var _anchorPoint : CGPoint = CGPoint(x: 0.0, y: 0.0)
+    var anchorPoint : CGPoint {
+        get {
+            return _anchorPoint
+        }
+        set(value) {
+            _anchorPoint = CGPoint(x: max(0.0, min(value.x, 1.0)), y: max(0.0, min(value.y, 1.0)))
+            let rect = CGRect(x: -(width * _anchorPoint.x), y: -(height * _anchorPoint.y),
+                              width: width, height: height)
+            let differenceX = rect.origin.x - lastOriginX
+            let differenceY = rect.origin.y - lastOriginY
+            self.path = CGPath(rect: rect, transform: nil)
+            for c in self.children {
+                c.position = CGPoint(x: c.position.x + differenceX, y: c.position.y + differenceY)
+            }
+            lastOriginX = rect.origin.x
+            lastOriginY = rect.origin.y
+        }
+    }
+    
+    override var position: CGPoint {
+        get {
+            return super.position
+        }
+        set(value) {
+            super.position = CGPoint(x: value.x, y: -value.y)
+            //self.anchorPoint = self._anchorPoint
+        }
+    }
     
     var x : CGFloat {
         get {
-            return offsetX + self.position.x
+            return self.position.x
         }
         set(value) {
-            self.position.x = offsetX + value
+            super.position = CGPoint(x: value, y: self.y)
         }
     }
     var y : CGFloat {
         get {
-            return offsetY + self.position.y
+            return self.position.y
         }
         set(value) {
-            self.position.y = offsetY - value
+            super.position = CGPoint(x: self.x, y: -value)
         }
     }
 
-    func position(_ x: CGFloat, _ y: CGFloat) {
+    func setPosition(_ x: CGFloat, _ y: CGFloat) {
         self.x = x
         self.y = y
     }
@@ -133,7 +152,9 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
         if let parent = parent {
             parent.addChild(self)
         }
-        position(0,0)
+        
+        self.anchorPoint = GASNodePivot.topLeft
+        self.position = CGPoint(x: 0, y: 0)
         
         if let closure = onTouch {
             onTouchClosure = closure

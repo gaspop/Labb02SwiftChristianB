@@ -11,77 +11,114 @@ import SpriteKit
 
 class GASButton {
     
-    var size : CGSize
-    let shape : GASRectangle
+    let size : CGSize
+    var position : CGPoint {
+        get {
+            return container.position
+        }
+        set(value) {
+            container.position = value
+        }
+    }
+    
+    private let container : GASRectangle
+    private let shape : GASRectangle
     private let touchShape : GASRectangle?
     var sprite : GASSprite?
-    var text : String?
+
     var textColor : UIColor?
     var font : UIFont?
     var onTouchClosure : (() -> Void)?
+    private var label : SKLabelNode?
+    var labelText : String? {
+        get {
+            if let label = self.label {
+                return label.text
+            } else {
+                return nil
+            }
+        }
+        set(value) {
+            if let label = self.label {
+                label.removeFromParent()
+            }
+            label = nil
+            label = SKLabelNode()
+            if let label = self.label {
+                if let font = font {
+                    label.fontName = font.fontName
+                    label.fontSize = font.pointSize
+                } else {
+                    label.fontName = "Helvetica"
+                    label.fontSize = 10
+                }
+                if let textColor = textColor {
+                    label.color = textColor
+                } else {
+                    label.color = UIColor.white
+                }
+                label.text = value
+                label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.center
+                label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.center
+                shape.addChild(label)
+                label.zPosition = label.parent!.zPosition + 0.2
+            }
+        }
+    }
     
     init(parent: SKNode, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?, onTouch: (() -> Void)?) {
-        self.shape = shape
         self.size = CGSize(width: shape.frame.width, height: shape.frame.height)
-        parent.addChild(self.shape)
+        self.container = GASRectangle(rectOf: shape.size, radius: 0, color: UIColor.clear, parent: parent, onTouch: nil)
+        self.container.zPosition = parent.zPosition + 0.1
+        self.shape = GASRectangle(rectOf: shape.size, radius: shape.cornerRadius, color: shape.fillColor, parent: container, onTouch: nil)
         self.shape.zPosition = parent.zPosition + 0.1
+        self.shape.anchorPoint = GASNodePivot.center
+        self.shape.position = CGPoint(x: size.width / 2, y: size.height / 2)
 
         
         if let sprite = sprite {
             let maxLength = max(sprite.size.width, sprite.size.height)
             let minShapeSide = min(size.width, size.height)
             let scale = minShapeSide / maxLength
+            self.shape.addChild(sprite)
+            sprite.anchorPoint = GASNodePivot.center
             sprite.size = CGSize(width: sprite.size.width * scale * 1.0, height: sprite.size.height * scale * 1.0)
-            shape.addChild(sprite)
             sprite.zPosition = sprite.parent!.zPosition + 0.1
         }
         
-        if let text = text {
-            self.text = text
-            let label = SKLabelNode()
-            if let font = font {
-                label.fontName = font.fontName
-                label.fontSize = font.pointSize
-            } else {
-                label.fontName = "Helvetica"
-                label.fontSize = 10
-            }
-            if let textColor = textColor {
-                label.color = textColor
-            } else {
-                label.color = UIColor.white
-            }
-            label.text = text
-            label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.center
-            label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.center
-            shape.addChild(label)
-            label.zPosition = label.parent!.zPosition + 0.2
-        }
-        
         if let closure = onTouch {
-            self.onTouchClosure = closure
-            touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, parent: shape, onTouch: onTouchClosure)
-            touchShape!.zPosition = touchShape!.parent!.zPosition + 0.3
+            self.touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, parent: self.shape, onTouch: nil)
+            self.touchShape!.zPosition = touchShape!.parent!.zPosition + 0.3
+            self.touchShape!.anchorPoint = GASNodePivot.center
+            self.onTouchClosure = {
+                self.shape.run(SKAction.scale(to: 0.9, duration: 0.1), completion: {
+                    self.shape.run(SKAction.scale(to: 1.0, duration: 0.1), completion: {
+                        closure()
+                    })
+                })
+            }
+            self.touchShape!.onTouchClosure = self.onTouchClosure
+            self.touchShape!.isUserInteractionEnabled = true
         } else {
             touchShape = nil
+        }
+        
+        if let font = font {
+            self.font = font
+        }
+        
+        if let text = text {
+            labelText = text
         }
 
     }
     
-    func position(_ x: CGFloat, _ y: CGFloat) {
-        shape.position(x, y)
-/*        var parentSize : CGSize
-        if let parent = shape.parent! as? SKScene {
-            parentSize = parent.size
-        } else {
-            parentSize = CGSize(width: 0, height: 0)
-        }
-        shape.position = CGPoint(x: -(parentSize.width / 2) + (size.width / 2) + at.x,
-                                 y: (parentSize.height / 2) - (size.height / 2) - at.y)*/
+    func setPosition(_ x: CGFloat, _ y: CGFloat) {
+        position = CGPoint(x: x, y: y)
     }
     
     func clear() {
-        self.shape.removeFromParent()
+        self.container.removeFromParent()
     }
     
 }

@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-class GASSprite : SKSpriteNode, GASNodeProtocol {
+class GASSprite : SKSpriteNode {
     
     var onTouchClosure : ((Void) -> Void)?
     
@@ -18,7 +18,7 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
             return self.size.width
         }
         set(value) {
-            self.size(value, height)
+            self.size = CGSize(width: value, height: self.size.height)
         }
     }
     var height : CGFloat {
@@ -26,14 +26,16 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
             return self.size.height
         }
         set(value) {
-            self.size(width, value)
+            self.size = CGSize(width: self.size.width, height: value)
         }
     }
     
+    /*
     func size(_ width: CGFloat, _ height: CGFloat) {
         self.size = CGSize(width: width, height: height)
-    }
+    }*/
     
+    /*
     private var _pivotMode : GASNodePivot = .topLeft
     var pivotMode : GASNodePivot {
         get {
@@ -43,8 +45,9 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
             _pivotMode = value
             position(x,y)
         }
-    }
+    }*/
     
+    /*
     private var offsetX : CGFloat {
         var x : CGFloat = 0
         switch(pivotMode) {
@@ -77,28 +80,40 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
             return y
         }
     }
+    */
+    
+    
+    override var position: CGPoint {
+        get {
+            return super.position
+        }
+        set(value) {
+            super.position = CGPoint(x: value.x, y: -value.y)
+        }
+    }
     
     var x : CGFloat {
         get {
-            return offsetX + self.position.x
+            return self.position.x
         }
         set(value) {
-            self.position.x = offsetX + value
+            super.position = CGPoint(x: value, y: self.y)
         }
     }
     var y : CGFloat {
         get {
-            return offsetY + self.position.y
+            return self.position.y
         }
         set(value) {
-            self.position.y = offsetY - value
+            super.position = CGPoint(x: self.x, y: -value)
         }
     }
     
-    func position(_ x: CGFloat, _ y: CGFloat) {
+    func setPosition(_ x: CGFloat, _ y: CGFloat) {
         self.x = x
         self.y = y
     }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let closure = onTouchClosure {
@@ -117,7 +132,9 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
         if let parent = parent {
             parent.addChild(self)
         }
-        position(0,0)
+        
+        self.anchorPoint = GASNodePivot.topLeft
+        self.position = CGPoint(x: 0, y: 0)
         
         if let closure = onTouch {
             onTouchClosure = closure

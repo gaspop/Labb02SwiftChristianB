@@ -36,6 +36,8 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
+        anchorPoint = GASNodePivot.topLeft
+        
         game = GASGame()
         game.player = GASPlayer(game: game,
                                 name: "Ture",
@@ -87,7 +89,7 @@ class GameScene: SKScene {
                                                 self.inventoryView!.selected = item
                                                 self.drawInventoryOptions()
         })
-        self.inventoryView!.view.position(viewGap, viewGap)
+        self.inventoryView!.position = CGPoint(x: viewGap,y: viewGap)
         self.inventoryView!.draw()
         self.drawInventoryOptions()
         
@@ -132,11 +134,11 @@ class GameScene: SKScene {
         } ))
         
         let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
-        let buttonStartY = viewGap + inventoryView!.size.height
+        let buttonStartY = (viewGap * 2) + inventoryView!.size.height
         
         for (index, tuple) in textAndClosure.enumerated() {
-            drawInterfaceButton(parent: self.inventoryView!.view,
-                                position: CGPoint(x: 0, y: buttonStartY + (buttonGap * CGFloat(index))),
+            drawInterfaceButton(parent: self,
+                                position: CGPoint(x: viewGap, y: buttonStartY + (buttonGap * CGFloat(index))),
                                 text: tuple.0, onTouch: tuple.1 )
         }
     }
@@ -159,7 +161,7 @@ class GameScene: SKScene {
                                                     self.drawPlayerInventoryOptions()
                                                     
                                                   })
-            self.inventoryView!.view.position(viewGap, viewGap)
+            self.inventoryView!.position = CGPoint(x: viewGap,y: viewGap)
             self.inventoryView!.draw()
             self.drawPlayerInventoryOptions()
         }
@@ -227,11 +229,11 @@ class GameScene: SKScene {
         } ))
         
         let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
-        let buttonStartY = viewGap + inventoryView!.size.height
+        let buttonStartY = (viewGap * 2) + inventoryView!.size.height
         
         for (index, tuple) in textAndClosure.enumerated() {
-            drawInterfaceButton(parent: self.inventoryView!.view,
-                                position: CGPoint(x: 0, y: buttonStartY + (buttonGap * CGFloat(index))),
+            drawInterfaceButton(parent: self,
+                                position: CGPoint(x: viewGap, y: buttonStartY + (buttonGap * CGFloat(index))),
                                 text: tuple.0, onTouch: tuple.1 )
         }
     }
@@ -247,9 +249,15 @@ class GameScene: SKScene {
                                scale: viewScale)
         gameView.drawScene()
         
-        let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
-        gameView.view.position = CGPoint(x: 0, y: sceneYPos)
-        
+        //let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
+        gameView.position = CGPoint(x: viewGap, y: viewGap)
+        //gameView.view.anchorPoint = GASNodePivot.center
+        /*
+        let rectum = GASRectangle(rectOf: CGSize(width: 256, height: 96), radius: 8, color: UIColor.green, parent: nil, onTouch: nil)
+        let butt = GASButton(parent: self,
+                            shape: rectum, sprite: nil, text: "Arse-Biscuit", textColor: nil, font: UIFont(name: "Helvetica", size: 64 * viewScale), onTouch: { print("Arse")} )
+        butt.position = CGPoint(x: viewGap, y: viewGap * 2 + viewSize)
+        */
         drawInterfacePlayerOptions(options: game.options)
     }
     
@@ -270,7 +278,8 @@ class GameScene: SKScene {
         let button = GASButton(parent: parent, shape: buttonShape, sprite: nil,
                                text: text, textColor: nil, font: buttonFont,
                                onTouch: onTouch)
-        button.position(position.x, position.y)
+        button.position = CGPoint(x: position.x, y: position.y)
+        //button.setPosition(position.x, position.y)
         buttons.append(button)
     }
     
