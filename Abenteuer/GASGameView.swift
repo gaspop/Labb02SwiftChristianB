@@ -44,17 +44,17 @@ class GASGameView {
         self.size = size
         self.scale = scale
         
-        self.view = GASRectangle(rectOf: size, radius: 0, color: nil, name: "poo", parent: self.parent, onTouch: nil)
+        self.view = GASRectangle(rectOf: size, radius: 0, color: nil, parent: self.parent, onTouch: nil)
     }
     
     func drawScene() {
         if let _ = self.scene {
             if let spriteScene = self.spriteScene {
-                NSLog("drawScene: Removing old node.")
+                // NSLog("drawScene: Removing old node.")
                 spriteScene.removeFromParent()
             }
-            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, name: "gameViewScene", parent: self.view, onTouch: nil)
-            NSLog("drawScene: Adding new node.")
+            spriteScene = GASSprite(imageNamed: imageForScene!, size: self.size, parent: self.view, onTouch: nil)
+            //NSLog("drawScene: Adding new node.")
             drawMonsters()
         }
     }
@@ -79,10 +79,23 @@ class GASGameView {
                     let sprite = GASSprite(imageNamed: imageForMonster(m.type),
                                            size: CGSize(width: CGFloat(m.geometry.width) * scale,
                                                         height: CGFloat(m.geometry.height) * scale),
-                                           name: nil, parent: self.view, onTouch: closure)
-                    sprite.pivotMode = .bottomCenter
+                                           parent: self.view, onTouch: closure)
+                    //sprite.pivotMode = .bottomCenter
+                    //sprite.anchorPoint = CGPoint(x: 0.5, y: 1.0)
                     sprite.position(CGFloat(m.geometry.x) * scale, 960 * scale)
                     sprite.zPosition = self.view.zPosition + 1.0
+                    sprite.anchorPoint = CGPoint(x: 0.5, y: 0.0)
+                    print("anchor: \(sprite.anchorPoint)")
+                    
+                    
+                    let action1 = SKAction.scaleY(to: 1.1, duration: 0.5)
+                    let action2 = SKAction.scaleY(to: 0.9, duration: 0.5)
+                    
+                    func temp() {
+                        sprite.run(action1, completion: { sprite.run(action2, completion: { temp() } ) } )
+                    }
+                    temp()
+                    
                     monsters.append(sprite)
                 }
             }

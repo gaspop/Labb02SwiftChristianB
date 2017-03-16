@@ -46,9 +46,20 @@ class GASContainer : GASSceneObject, GASInventory {
 
 enum GASContainerType : Int {
     
+    case undefined = 0
     case chest = 1
     case wreckage = 2
     case hollowTree = 3
+    
+}
+
+func stringForContainer(_ container: GASContainerType) -> String {
+    switch(container) {
+    case .chest:        return "treasure chest"
+    case .hollowTree:   return "tree"
+    case .wreckage:     return "wreckage"
+    default:    return "nothing"
+    }
     
 }
 

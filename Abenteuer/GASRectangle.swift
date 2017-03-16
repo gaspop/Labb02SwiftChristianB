@@ -111,7 +111,7 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
         }
     }
     
-    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, name: String?, parent: SKNode?, onTouch: (() -> Void)?) {
+    init(rectOf: CGSize, radius: CGFloat, color: UIColor?, parent: SKNode?, onTouch: (() -> Void)?) {
         size = rectOf
         cornerRadius = radius
         super.init()
@@ -129,10 +129,6 @@ class GASRectangle : SKShapeNode, GASNodeProtocol {
         }
         self.lineWidth = 0
         self.glowWidth = 0
-        
-        if let name = name {
-            self.name = name
-        }
         
         if let parent = parent {
             parent.addChild(self)

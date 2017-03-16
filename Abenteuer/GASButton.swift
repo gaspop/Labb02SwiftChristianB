@@ -12,13 +12,12 @@ import SpriteKit
 class GASButton {
     
     var size : CGSize
-    var shape : GASRectangle
+    let shape : GASRectangle
+    private let touchShape : GASRectangle?
     var sprite : GASSprite?
     var text : String?
     var textColor : UIColor?
     var font : UIFont?
-    //var id : String?
-    var option : GASGameOption?
     var onTouchClosure : (() -> Void)?
     
     init(parent: SKNode, shape: GASRectangle, sprite: GASSprite?, text: String?, textColor: UIColor?, font: UIFont?, onTouch: (() -> Void)?) {
@@ -61,8 +60,10 @@ class GASButton {
         
         if let closure = onTouch {
             self.onTouchClosure = closure
-            let touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, name: nil, parent: shape, onTouch: onTouchClosure)
-            touchShape.zPosition = touchShape.parent!.zPosition + 0.3
+            touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, parent: shape, onTouch: onTouchClosure)
+            touchShape!.zPosition = touchShape!.parent!.zPosition + 0.3
+        } else {
+            touchShape = nil
         }
 
     }

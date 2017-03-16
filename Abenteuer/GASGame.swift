@@ -11,15 +11,17 @@ import Foundation
 enum GASGameOptionType : Int {
     case attack = 0
     case search = 1
-    case inventory = 2
-    case travel = 3
-    case `continue` = 4
+    case gather = 2
+    case inventory = 3
+    case travel = 4
+    case `continue` = 5
 }
 
 func stringForOption(_ option: GASGameOptionType) -> String {
     switch(option) {
     case .attack:       return "Attack"
     case .search:       return "Search"
+    case .gather:       return "Gather loot"
     case .inventory:    return "Inventory"
     case .travel:       return "Travel onwards"
     case .continue:     return "Continue"
@@ -53,8 +55,6 @@ class GASGame {
     init() {
         monsterCount = 0
         itemCount = 0
-        //newScene()
-        //generateOptions()
     }
     
     func newScene() {
@@ -63,15 +63,6 @@ class GASGame {
         NSLog("GASGame.newScene: index = \(rndIndex)   scene = \(rndScene[rndIndex])")
         scene = GASScene(game: self, id: rndScene[rndIndex])
         
-        //newBattle()
-        //evaluateBattle()
-        //generateOptions()
-        /*if let scene = self.scene,
-            let player = self.player {
-            if player.isAlive && scene.monsters.count > 0 {
-                newBattle()
-            }
-        }*/
     }
     
     func newBattle() {
@@ -82,8 +73,6 @@ class GASGame {
             combatants = Array(scene.monsters)
             combatants.append(player)
             battle = GASBattle(game: self, combatants: combatants)
-            //battle!.newRound()
-            //battle!.newTurn()
         } else {
             NSLog("GASGame.newBattle: Could not start new battle!")
         }
@@ -117,6 +106,7 @@ class GASGame {
                     NSLog("experience pre: \(player!.experience)")
                     player!.experience += xpReward
                     NSLog("experience post: \(player!.experience)")
+                    scene!.gatherLoot()
                 }
                 self.battle = nil
                 self.scene!.monsters = self.scene!.monsters.filter( { monster in monster.isAlive } )
@@ -136,20 +126,25 @@ class GASGame {
         if let scene = self.scene {
             if let battle = self.battle,
                 let unit = battle.turnList.first {
-                NSLog("GASGame.generateOptions: Adding Battle options.")
+                //NSLog("GASGame.generateOptions: Adding Battle options.")
                 if unit.id == GASGame.playerId {
                     options!.append(GASGameOption(type: .attack, text: stringForOption(.attack)))
                 } else {
                     options!.append(GASGameOption(type: .continue, text: stringForOption(.continue)))
                 }
             } else {
-                NSLog("GASGame.generateOptions: Adding Adventure options.")
+                //NSLog("GASGame.generateOptions: Adding Adventure options.")
                 if scene.paths.count > 0 {
                     options!.append(GASGameOption(type: .travel, text: stringForOption(.travel)))
                     NSLog("Travel option!")
                 }
-                if scene.containers.count > 1 {
-                    options!.append(GASGameOption(type: .search, text: stringForOption(.search)))
+                if scene.loot.inventory.count > 0 {
+                    options!.append(GASGameOption(type: .gather, text: stringForOption(.gather)))
+                }
+                if let container = scene.containers.first,
+                    container.inventory.count > 0 {
+                    options!.append(GASGameOption(type: .search,
+                                                  text: "\(stringForOption(.search)) \(stringForContainer(container.type))" ))
                     NSLog("Container option")
                 }
             }

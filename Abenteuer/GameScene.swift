@@ -73,10 +73,78 @@ class GameScene: SKScene {
         //drawTest()
     }
     
-    func drawInventory() {
+    func drawInventory(container: GASContainer) {
         clearInterfaceButtons()
         if let inventoryView = self.inventoryView {
-            inventoryView.clear()
+            inventoryView.close()
+            self.inventoryView = nil
+        }
+        
+        self.inventoryView = GASInventoryView(parent: self, source: container,
+                                              rows: 5, columns: 5, size: viewSize, scale: viewScale,
+                                              overlay: nil, onItemTouch: {
+                                                item in
+                                                self.inventoryView!.selected = item
+                                                self.drawInventoryOptions()
+        })
+        self.inventoryView!.view.position(viewGap, viewGap)
+        self.inventoryView!.draw()
+        self.drawInventoryOptions()
+        
+    }
+    
+    func drawInventoryOptions() {
+        clearInterfaceButtons()
+        var textAndClosure : [(String,() -> Void)] = []
+        if let player = game.player {
+            if let item = inventoryView?.selected {
+                textAndClosure.append(("Take", {
+                    player.inventory.append(item)
+                    if let index = self.inventoryView!.source.inventory.index(where:  { $0.id == item.id } ) {
+                        self.inventoryView!.source.inventory.remove(at: index)
+                    }
+                    self.inventoryView!.selected = nil
+                    self.inventoryView!.update()
+                    self.drawInventoryOptions()
+                }))
+            }
+            if inventoryView!.source.inventory.count > 0 {
+                textAndClosure.append(("Take all", {
+                    for i in self.inventoryView!.source.inventory {
+                        player.inventory.append(i)
+                    }
+                    self.inventoryView!.source.inventory = []
+                    self.inventoryView!.close()
+                    self.inventoryView = nil
+                    self.game.generateOptions()
+                    self.drawInterfacePlayerOptions(options: self.game.options)
+                }))
+            }
+        }
+        
+        
+        
+        textAndClosure.append(("Close", {
+            self.inventoryView!.close()
+            self.inventoryView = nil
+            self.game.generateOptions()
+            self.drawInterfacePlayerOptions(options: self.game.options)
+        } ))
+        
+        let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
+        let buttonStartY = viewGap + inventoryView!.size.height
+        
+        for (index, tuple) in textAndClosure.enumerated() {
+            drawInterfaceButton(parent: self.inventoryView!.view,
+                                position: CGPoint(x: 0, y: buttonStartY + (buttonGap * CGFloat(index))),
+                                text: tuple.0, onTouch: tuple.1 )
+        }
+    }
+
+    func drawPlayerInventory() {
+        clearInterfaceButtons()
+        if let inventoryView = self.inventoryView {
+            inventoryView.close()
             self.inventoryView = nil
         }
         
@@ -84,28 +152,31 @@ class GameScene: SKScene {
             self.inventoryView = GASInventoryView(parent: self,
                                                   source: player,
                                                   rows: 5, columns: 5, size: viewSize, scale: viewScale,
+                                                  overlay: nil,
                                                   onItemTouch: {
                                                     item in
                                                     self.inventoryView!.selected = item
-                                                    self.drawInventoryOptions()
+                                                    self.drawPlayerInventoryOptions()
                                                     
                                                   })
             self.inventoryView!.view.position(viewGap, viewGap)
             self.inventoryView!.draw()
-            self.drawInventoryOptions()
+            self.drawPlayerInventoryOptions()
         }
     }
     
-    func drawInventoryOptions() {
+    func drawPlayerInventoryOptions() {
         clearInterfaceButtons()
         var textAndClosure : [(String,() -> Void)] = []
         if let player = game.player,
            let item = inventoryView?.selected {
-            
+            var isSelectedWeaponId = false
+            var isSelectedArmorId = false
             
             if let item = item as? GASWeapon {
                 if let current = player.weapon,
                     current.id == item.id {
+                    isSelectedWeaponId = true
                     textAndClosure.append(("Remove", {
                         player.weapon = nil
                         self.deselectAndUpdate()
@@ -120,6 +191,7 @@ class GameScene: SKScene {
             } else if let item = item as? GASArmor {
                 if let current = player.armor,
                     current.id == item.id {
+                        isSelectedArmorId = true
                         textAndClosure.append(("Remove", {
                             player.armor = nil
                             self.deselectAndUpdate()
@@ -132,9 +204,15 @@ class GameScene: SKScene {
                 }
             }
             textAndClosure.append(("Drop item", {
+                self.game.scene!.loot.inventory.append(item)
                 if let index = player.inventory.index(where:  { $0.id == item.id } ) {
                     player.inventory.remove(at: index)
-                    //self.inventoryView!.inventory = player.inventory
+                }
+                if isSelectedWeaponId {
+                    player.weapon = nil
+                }
+                if isSelectedArmorId {
+                    player.armor = nil
                 }
                 self.inventoryView!.update()
                 self.deselectAndUpdate()
@@ -144,6 +222,7 @@ class GameScene: SKScene {
         textAndClosure.append(("Close", {
             self.inventoryView!.close()
             self.inventoryView = nil
+            self.game.generateOptions()
             self.drawInterfacePlayerOptions(options: self.game.options)
         } ))
         
@@ -154,13 +233,12 @@ class GameScene: SKScene {
             drawInterfaceButton(parent: self.inventoryView!.view,
                                 position: CGPoint(x: 0, y: buttonStartY + (buttonGap * CGFloat(index))),
                                 text: tuple.0, onTouch: tuple.1 )
-            
         }
     }
     
     func deselectAndUpdate() {
         self.inventoryView!.selected = nil
-        self.drawInventoryOptions()
+        self.drawPlayerInventoryOptions()
     }
     
     func drawInterfaceGame() {
@@ -188,7 +266,7 @@ class GameScene: SKScene {
         let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
         
         let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.brown,
-                                       name: nil, parent: nil, onTouch: nil)
+                                       parent: nil, onTouch: nil)
         let button = GASButton(parent: parent, shape: buttonShape, sprite: nil,
                                text: text, textColor: nil, font: buttonFont,
                                onTouch: onTouch)
@@ -233,10 +311,16 @@ class GameScene: SKScene {
             self.drawInterfacePlayerOptions(options: self.game.options!)
             }
         case .inventory:    return {
-            self.drawInventory()
+            self.drawPlayerInventory()
             }
-        default:
-            return nil
+        case .gather:       return {
+            self.drawInventory(container: self.game.scene!.loot)
+            }
+        case .search:       return {
+            self.drawInventory(container: self.game.scene!.containers.first!)
+            }
+        //default:
+        //    return nil
         }
     }
     

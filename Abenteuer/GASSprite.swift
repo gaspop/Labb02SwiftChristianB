@@ -106,17 +106,13 @@ class GASSprite : SKSpriteNode, GASNodeProtocol {
         }
     }
 
-    init(imageNamed: String, size: CGSize?, name: String?, parent: SKNode?, onTouch: (() -> Void)?) {
+    init(imageNamed: String, size: CGSize?, parent: SKNode?, onTouch: (() -> Void)?) {
         let texture = SKTexture(imageNamed: imageNamed)
         var useSize = texture.size()
         if let size = size {
             useSize = size
         }
         super.init(texture: texture, color: UIColor.clear, size: useSize)
-        
-        if let name = name {
-            self.name = name
-        }
         
         if let parent = parent {
             parent.addChild(self)
