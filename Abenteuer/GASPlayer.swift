@@ -8,13 +8,6 @@
 
 import Foundation
 
-class GameStats {
-    static let healthIncreaseFactor : Float = 0.75
-    static let maxHealthIncreaseBase: Int = 20
-    static let experienceBase: Int = 25
-    static let experienceIncreaseBase : Int = 2
-}
-
 class GASPlayer : GASUnit, GASInventory {
     /*
     static var sceneObjectType : GASObjectType {
@@ -51,7 +44,7 @@ class GASPlayer : GASUnit, GASInventory {
     }
     
     var experienceLimit : Int {
-        return GameStats.experienceBase * Int(pow(Float(GameStats.experienceIncreaseBase), Float(level)))
+        return GameStats.experienceBase * Int(pow(Float(GameStats.experienceIncreaseBase), Float(level - 1)))
     }
     
     var isAlive : Bool {
@@ -84,14 +77,25 @@ class GASPlayer : GASUnit, GASInventory {
     }
     
     func attack(_ target: GASUnit) {
-        var weaponDamage = 0
-        if let weapon = self.weapon {
-            weaponDamage = random(weapon.damageMin, weapon.damageMax + 1)
+        if (100 - GameStats.playerChanceToHit) < random(100) {
+            var weaponDamage = 0
+            if let weapon = self.weapon {
+                weaponDamage = random(weapon.damageMin, weapon.damageMax + 1)
+            }
+            let baseDamage = Int(pow(Float(max(stats.damage, 2)),Float(level) / 3).rounded())
+            let damage = (baseDamage + weaponDamage) * stats.strength
+            NSLog("GASPlayer.attack(): Attacking with \(damage) damage.")
+            
+            var previousHealth = target.stats.health
+            target.takeDamage(damage)
+            previousHealth -= target.stats.health
+            GASEvent.new(GASBattleEvent(.playerHitTarget, unitId: id, targetId: target.id, value: Float(previousHealth), hold: true))
+            if !target.isAlive {
+                GASEvent.new(GASBattleEvent(.monsterDies, unitId: id, targetId: target.id, value: 0, hold: true))
+            }
+        } else {
+            GASEvent.new(GASBattleEvent(.playerMissTarget, unitId: id, targetId: target.id, value: 0, hold: true))
         }
-        let baseDamage = Int(pow(Float(max(stats.damage, 2)),Float(level) / 3).rounded())
-        let damage = (baseDamage + weaponDamage) * stats.strength
-        NSLog("GASPlayer.attack(): Attacking with \(damage) damage.")
-        target.takeDamage(damage)
     }
     
     func takeDamage(_ amount: Int) {
@@ -105,6 +109,9 @@ class GASPlayer : GASUnit, GASInventory {
         
         NSLog("GASPlayer.takedamage(): Took \(damageTaken) damage from a total of \(amount) dealt.")
         self.stats.health -= damageTaken
+        if !self.isAlive {
+            GASEvent.insert(GASBattleEvent(.playerDies, hold: true))
+        }
         
     }
     
@@ -115,6 +122,8 @@ class GASPlayer : GASUnit, GASInventory {
             stats.health += Int(Float(bonusHealth) * GameStats.healthIncreaseFactor)
             level += 1
         }
+        GASEvent.new(GASGameEvent(.playerLevelUp, hold: true))
+        /*
         NSLog("Player.levelUp: Level \(level) reached.")
         NSLog("Hitpoints: \(stats.health) / \(stats.maxHealth)")
         NSLog("Experience: \(experience) / \(experienceLimit)")
@@ -122,6 +131,7 @@ class GASPlayer : GASUnit, GASInventory {
         NSLog("Unarmed Damage: \(Int(pow(Float(max(stats.damage, 2)),Float(level) / 3).rounded()) * stats.strength)")
         NSLog("Base Block: \(Int(pow(Float(2),Float(level) / 3).rounded()))")
         NSLog("Player.levelUp: Next level experience limit is \(experienceLimit).")
+        */
     }
     
 }

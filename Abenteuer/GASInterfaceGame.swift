@@ -44,6 +44,8 @@ class GASInterfaceGame {
     }
     
     private var optionView : GASOptionView?
+    private var messageBox : GASTextBox?
+    private var messageBoxTouch : GASRectangle?
     
     
     init(parent: GameScene) {
@@ -51,19 +53,70 @@ class GASInterfaceGame {
         self.gameViewSize = parent.size.height * gameViewScreenShare
         self.gameViewScale = gameViewSize / gameViewMaxSize
         self.gameViewMargin = (parent.size.width - gameViewSize) / 2
-        
         self.gameView = GASGameView(parent: parent,
                                     size: CGSize(width: gameViewSize, height: gameViewSize), scale: gameViewScale)
         self.gameView.position = CGPoint(x: gameViewMargin, y: gameViewMargin)
     }
     
-    func displayOptions(_ options: [GASOptionViewData]) {
+    func close() {
+        self.gameView.close()
+        if let messageBox = self.messageBox {
+            messageBox.close()
+        }
+        if let messageBoxTouch = self.messageBoxTouch {
+            messageBoxTouch.removeFromParent()
+        }
+    }
+    
+    func hideLastMessage() {
+        if let messageBox = self.messageBox {
+            messageBox.close()
+        }
+        self.messageBox = nil
+        if let messageBoxTouch = self.messageBoxTouch {
+            messageBoxTouch.removeFromParent()
+        }
+        self.messageBoxTouch = nil
+    }
+    
+    func displayMessage(_ text: String) {
+        hideLastMessage()
+        
+        let closure : () -> Void = {
+            self.optionView = nil
+            let font = UIFont(name: "Helvetica", size: 64 * self.gameViewScale)
+            let shape = GASRectangle(rectOf: CGSize(width: self.gameViewSize, height: 64), radius: 4, color: UIColor.brown, parent: nil, onTouch: nil)
+            self.messageBox = GASTextBox(parent: self.parent, shape: shape,
+                                         padding: 64 * self.gameViewScale,
+                                         font: font!, fontColor: UIColor.white,
+                                         text: text, onTouch: nil )
+            self.messageBox!.position = CGPoint(x: self.optionViewOffsetX, y: self.optionViewOffsetY)
+            self.messageBoxTouch = GASRectangle(rectOf: CGSize(width: self.parent.size.width, height: self.parent.size.height),
+                                                radius: 0, color: UIColor.clear, parent: self.parent, onTouch: {
+                                                    GASEvent.next() } )
+            self.messageBoxTouch!.zPosition = 15.0
+        }
+        
         if let lastOptionView = self.optionView {
             UserInteraction.isEnabled = false
             lastOptionView.animate(action: SKAction.moveTo(x: -lastOptionView.size.width, duration: optionMoveTime), completion: {
                 lastOptionView.close()
+                closure()
+                UserInteraction.isEnabled = true
             })
+        } else {
+            closure()
         }
+        
+    }
+    
+    
+    func displayOptions(_ options: [GASOptionViewData]) {
+        hideLastMessage()
+        if let lastOptionView = self.optionView {
+            lastOptionView.close()
+        }
+        NSLog("displayOptions: Displaying new options.")
         let font = UIFont(name: "Helvetica", size: 64 * gameViewScale)
         self.optionView = GASOptionView(parent: parent,
                                         zPosition: 1.0,
@@ -88,18 +141,15 @@ class GASInterfaceGame {
         if let scene = game.scene {
             if let battle = game.battle {
                 options.append(GASOptionViewData(text: "Attack!", closure: {
-                    GASEvent.finish()
+                    GASEvent.next()
                     battle.takeTurn()
                 } ))
             }
             else {
-                if scene.paths.count > 0 {
-                    NSLog("Travel option!")
-                    options.append(GASOptionViewData(text: "Travel onwards", closure: {
-                        GASEvent.finish()
-                        self.game.newScene()
-                    }))
-                }
+                options.append(GASOptionViewData(text: "Travel onwards", closure: {
+                    GASEvent.next()
+                    self.game.newScene()
+                }))
                 if scene.loot.inventory.count > 0 {
                     options.append(GASOptionViewData(text: "Gather loot", closure: {
                         self.optionView!.close()
@@ -131,8 +181,7 @@ class GASInterfaceGame {
     func generatePauseOptions() {
         var options : [GASOptionViewData] = []
         options.append(GASOptionViewData(text: "Continue", closure: {
-            GASEvent.finish()
-            self.game.battle!.takeTurn()
+            GASEvent.next()
         } ))
         displayOptions(options)
     }

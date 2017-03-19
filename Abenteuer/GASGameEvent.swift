@@ -13,6 +13,8 @@ enum GASGameEventType {
     case newGame
     case gameStart
     case gameEnd
+    case gameReset
+    case playerLevelUp
     case showInventory
     case showContainer
     case showLoot

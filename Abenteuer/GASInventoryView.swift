@@ -151,8 +151,16 @@ class GASInventoryView {
     
     func itemImageForTypeId(id: GASItemTypeId) -> String {
         switch(id) {
+        case .wpnBat:               return "itemWpnClub"
         case .wpnSword:             return "itemWpnSword"
+        case .wpnAxe:               return "itemWpnAxe"
         case .armShieldWooden:      return "itemArmShieldWooden"
+        case .armShieldSteel:       return "itemArmShieldSteel"
+        case .conFoodBread:         return "itemConFoodBread"
+        case .conPotion:            return "itemConPotion"
+        case .treGoldCoin:          return "itemTreMoney"
+        case .treJewel:             return "itemTreGem"
+        case .treNecklace:          return "itemTreMedal"
             
         default:    return "inventorySlot"
         }

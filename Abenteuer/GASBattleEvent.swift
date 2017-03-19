@@ -11,11 +11,11 @@ import Foundation
 class GASBattleEvent : GASEvent {
     
     let type : GASBattleEventType
-    let unitId : Int?
-    let targetId : Int?
-    let value : Float?
+    let unitId : Int
+    let targetId : Int
+    let value : Float
     
-    init(_ type: GASBattleEventType, unitId: Int?, targetId: Int?, value: Float?, hold: Bool = false) {
+    init(_ type: GASBattleEventType, unitId: Int, targetId: Int, value: Float, hold: Bool = false) {
         self.type = type
         self.unitId = unitId
         self.targetId = targetId
@@ -25,9 +25,9 @@ class GASBattleEvent : GASEvent {
     
     init(_ type: GASBattleEventType, hold: Bool = false) {
         self.type = type
-        self.unitId = nil
-        self.targetId = nil
-        self.value = nil
+        self.unitId = 0
+        self.targetId = 0
+        self.value = 0
         super.init(type: .battle, hold: hold)
     }
     
@@ -43,9 +43,11 @@ enum GASBattleEventType {
     case playerHitTarget
     case playerMissTarget
     case playerDies
+    case playerFinishedTurn
     case monsterAttacks
     case monsterHitTarget
     case monsterMissTarget
     case monsterDies
+    case monsterFinishedTurn
     
 }

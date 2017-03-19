@@ -11,6 +11,7 @@ import Foundation
 enum GASSceneEventType {
     
     case newScene
+    case describeScene
     case playerMakeMove
     
 }

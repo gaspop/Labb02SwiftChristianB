@@ -42,33 +42,24 @@ class GASBattle {
         return !playerIsAlive || (playerIsAlive && combatants.count == 1)
     }
     
-    var isAwaitingUnitMove : Bool {
-        if let _ = turnList.first {
-            return true
-        }
-        return false
-    }
-    
     init(game: GASGame, combatants: [GASUnit]) {
         self.game = game
         self._combatants = combatants
         self.turnList = []
-        NSLog("GASBattle.init: New battle with \(combatants.count) combatants.")
-        GASEvent.new(GASBattleEvent(.battleStart))
+        //NSLog("GASBattle.init: New battle with \(combatants.count) combatants.")
+        GASEvent.new(GASBattleEvent(.battleStart, hold: true))
         newRound()
         evaluate()
     }
     
-    //var currentTurn
-    
     func evaluate() {
         if !isBattleFinished {
-            if let unit = turnList.first {
+            if let unit = turnList.first,
+                unit.isAlive {
                 if unit is GASPlayer {
                     game.newPlayerMove()
-                    //GASEvent.new(GASBattleEvent(.newTurnForPlayer, hold: true))
-                } else {
-                    GASEvent.new(GASBattleEvent(.newTurnForMonster, hold: true))
+                } else if unit is GASMonster {
+                    GASEvent.new(GASBattleEvent(.newTurnForMonster, hold: false))
                 }
             } else {
                 newRound()
@@ -76,12 +67,9 @@ class GASBattle {
             }
         } else {
             if playerIsAlive {
-                game.endBattle()
-                // GASEvent.new(GASBattleEvent(.battleEnd))
-            } else {
-                game.endBattle()
-                //GASEvent.new(GASBattleEvent(.playerDies))
+                game.collectBattleRewards()
             }
+            game.endBattle()
         }
     
     }
@@ -122,6 +110,11 @@ class GASBattle {
                 return
             } else {
                 unit.attack(target)
+                if unit is GASPlayer && target.isAlive {
+                    GASEvent.new(GASBattleEvent(.playerFinishedTurn, hold: true))
+                } else {
+                    GASEvent.new(GASBattleEvent(.monsterFinishedTurn, hold: true))
+                }
                 turnList.remove(at: 0)
                 evaluate()
             }
@@ -133,7 +126,7 @@ class GASBattle {
                 takeTurn()
                 return
             } else {
-                NSLog("GASBattle.takeTurn: Unit '\(unit.id)' couldn't find any targets.")
+                //NSLog("GASBattle.takeTurn: Unit '\(unit.id)' couldn't find any targets.")
                 turnList.remove(at: 0)
                 evaluate()
                 return
@@ -145,7 +138,7 @@ class GASBattle {
     func setTarget(forUnit: GASUnit, target: GASUnit?) {
         var unit = forUnit
         if let target = target {
-            NSLog("GASBattle.takeTurn: Target set to id \(target.id)")
+            //NSLog("GASBattle.takeTurn: Target set to id \(target.id)")
             unit.target = target
         } else {
             unit.target = nil
@@ -161,7 +154,6 @@ class GASBattle {
                 }
             }
         } else if forUnit is GASMonster {
-            // NOTE TO SELF: WHAT ZE FECK? is???
             return self.player
         } else {
             return nil

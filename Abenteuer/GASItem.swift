@@ -43,6 +43,7 @@ enum GASItemTypeId : Int {
     case conFoodBanana      = 203
     case conFoodChicken     = 204
     case conFoodFish        = 205
+    case conPotion          = 206
     
     case treGoldCoin        = 301
     case treNecklace        = 302

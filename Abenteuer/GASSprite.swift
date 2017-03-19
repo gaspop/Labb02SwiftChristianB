@@ -30,59 +30,6 @@ class GASSprite : SKSpriteNode {
         }
     }
     
-    /*
-    func size(_ width: CGFloat, _ height: CGFloat) {
-        self.size = CGSize(width: width, height: height)
-    }*/
-    
-    /*
-    private var _pivotMode : GASPivot = .topLeft
-    var pivotMode : GASPivot {
-        get {
-            return _pivotMode
-        }
-        set(value) {
-            _pivotMode = value
-            position(x,y)
-        }
-    }*/
-    
-    /*
-    private var offsetX : CGFloat {
-        var x : CGFloat = 0
-        switch(pivotMode) {
-        case .topLeft:      x = (width / 2)
-        case .bottomCenter: x = 0
-        default:            x = 0
-        }
-        
-        if let parent = self.parent as? SKScene {
-            return -(parent.size.width / 2) + x
-        } else if let parent = self.parent as? GASNodeProtocol {
-            return -(parent.width / 2) + x
-        }else {
-            return x
-        }
-    }
-    private var offsetY : CGFloat {
-        var y : CGFloat = 0
-        switch(pivotMode) {
-        case .topLeft:      y = -(height / 2)
-        case .bottomCenter: y = (height / 2)
-        default:            y = 0
-        }
-        
-        if let parent = self.parent as? SKScene {
-            return (parent.size.height / 2) + y
-        } else if let parent = self.parent as? GASNodeProtocol {
-            return (parent.height / 2) + y
-        }else {
-            return y
-        }
-    }
-    */
-    
-    
     override var position: CGPoint {
         get {
             return super.position

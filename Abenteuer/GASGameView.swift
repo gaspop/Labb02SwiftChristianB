@@ -34,16 +34,21 @@ class GASGameView {
     }
     
     var sceneSprite: GASSprite?
-    var monsterSprites : [GASSprite] = []
+    var monsterSprites : [GASGameMonsterView] = []
     
-    var imageForScene : String? {
-        switch(scene!.id) {
-        case GASScene.keyScene01: return "sceneBackground01"
-        case GASScene.keyScene02: return "sceneBackground02"
-        case GASScene.keyScene03: return "sceneBackground03"
-        case GASScene.keyScene04: return "sceneBackground04"
+    var imageForScene : String {
+        switch(scene!.type) {
+        case .forestInside:
+            return "sceneBackground01"
+        case .field:
+            return "sceneBackground02"
+        case .forestOutside:
+            return "sceneBackground03"
+        case .hills:
+            return "sceneBackground04"
+            /*
         default: NSLog("Error in GASGameView.imageForScene: missing case")
-                 return nil
+                 return nil*/
         }
     }
     
@@ -62,19 +67,22 @@ class GASGameView {
                 // NSLog("drawScene: Removing old node.")
                 sceneSprite.removeFromParent()
             }
-            sceneSprite = GASSprite(imageNamed: imageForScene!, size: self.size, parent: self.view, onTouch: nil)
+            sceneSprite = GASSprite(imageNamed: imageForScene, size: self.size, parent: self.view, onTouch: nil)
             drawMonsters()
         }
     }
     
-    func drawMonsters() {
+    func clearMonsters() {
         for m in monsterSprites {
-            m.removeFromParent()
-            m.removeAllActions()
+            m.clear()
         }
-        
+    }
+    
+    func drawMonsters() {
+        clearMonsters()
         monsterSprites = []
-        if let scene = scene {
+        if let scene = scene,
+           let sceneSprite = sceneSprite {
             for m in scene.monsters {
                 if m.isAlive {
                     var closure : (() -> Void)? = nil
@@ -85,47 +93,18 @@ class GASGameView {
                             battle.setTarget(forUnit: unit, target: m)
                         }
                     }
-                    let sprite = GASSprite(imageNamed: imageForMonster(m.type),
-                                           size: CGSize(width: CGFloat(m.geometry.width) * scale,
-                                                        height: CGFloat(m.geometry.height) * scale),
-                                           parent: self.view, onTouch: closure)
-
-                    sprite.setPosition(CGFloat(m.geometry.x) * scale, 960 * scale)
-                    sprite.zPosition = self.view.zPosition + 1.0
-                    sprite.anchorPoint = CGPoint(x: 0.5, y: 0.0)
-                    //print("anchor: \(sprite.anchorPoint)")
-                    
-                    
-                    let action1 = SKAction.scaleY(to: 1.05, duration: 0.25)
-                    let action2 = SKAction.scaleY(to: 0.95, duration: 0.25)
-                    
-                    func temp() {
-                        sprite.run(action1, completion: { sprite.run(action2, completion: { temp() } ) } )
-                    }
-                    temp()
-                    
-                    monsterSprites.append(sprite)
+                    let view = GASGameMonsterView(parent: sceneSprite, source: m, scale: self.scale, onTouch: closure)
+                    monsterSprites.append(view)
                 }
             }
         }
     }
-
-}
-
-func imageForMonster(_ type: GASMonsterType) -> String {
-    switch (type) {
-    case .idiot:
-        return "monsterIdiot"
-    case .thug:
-        return "monsterThug"
-    case .jerk:
-        return "monsterJerk"
-    case .spider:
-        return "monsterSpider"
-    case .slime:
-        return "monsterSlime"
-    case .duck:
-        return "monsterDuck"
-    //default: return "monsterJerk"
+    
+    func close() {
+        clearMonsters()
+        self.view.removeAllChildren()
+        self.view.removeFromParent()
     }
+
 }
+

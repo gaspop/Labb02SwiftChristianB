@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SpriteKit
 
 func random(_ from: Int, _ to: Int) -> Int {
     let value : Int = Int(arc4random_uniform(UInt32(to))) + from
@@ -20,4 +21,10 @@ func random(_ to: Int) -> Int {
 
 class UserInteraction {
     static var isEnabled : Bool = true
+}
+
+class GASPivot {
+    static var topLeft : CGPoint        { return CGPoint(x: 0.0, y: 1.0) }
+    static var center : CGPoint         { return CGPoint(x: 0.5, y: 0.5) }
+    static var bottomCenter : CGPoint   { return CGPoint(x: 0.5, y: 0.0) }
 }

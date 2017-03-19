@@ -8,6 +8,18 @@
 
 import Foundation
 
+
+enum GASMonsterType : Int {
+    
+    case idiot = 1
+    case thug = 2
+    case jerk = 3
+    case spider = 4
+    case slime = 5
+    case duck = 6
+    
+}
+
 class GASMonster : GASSceneObject, GASUnit, GASInventory {
     
     static var sceneObjectType : GASObjectType {
@@ -71,13 +83,21 @@ class GASMonster : GASSceneObject, GASUnit, GASInventory {
     }
     
     func attack(_ target: GASUnit) {
-        var weaponDamage = 0
-        if let weapon = self.weapon {
-            weaponDamage = random(weapon.damageMin, weapon.damageMax + 1)
+        if (100 - GameStats.monsterChanceToHit) < random(100) {
+            var weaponDamage = 0
+            if let weapon = self.weapon {
+                weaponDamage = random(weapon.damageMin, weapon.damageMax + 1)
+            }
+            let damage = (stats.damage + weaponDamage) * stats.strength
+            NSLog("GASMonster.attack(): Monster '\(id)' attacking with \(damage) damage.")
+            
+            var previousHealth = target.stats.health
+            target.takeDamage(damage)
+            previousHealth -= target.stats.health
+            GASEvent.new(GASBattleEvent(.monsterHitTarget, unitId: id, targetId: 0, value: Float(previousHealth), hold: true))
+        } else {
+            GASEvent.new(GASBattleEvent(.monsterMissTarget, unitId: id, targetId: 0, value: 0, hold: true))
         }
-        let damage = (stats.damage + weaponDamage) * stats.strength
-        NSLog("GASMonster.attack(): Monster '\(id)' attacking with \(damage) damage.")
-        target.takeDamage(damage)
     }
     
     func takeDamage(_ amount: Int) {
@@ -90,22 +110,115 @@ class GASMonster : GASSceneObject, GASUnit, GASInventory {
         
         NSLog("GASMonster.takedamage(): Monster '\(id)' took \(damageTaken) damage from a total of \(amount) dealt.")
         self.stats.health -= damageTaken
-        if !self.isAlive {
-            GASEvent.new(GASBattleEvent(.monsterDies))
-        }
     }
     
+    static func create(game: GASGame, type: GASMonsterType) -> GASMonster {
+        switch(type) {
+        case .idiot:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 10, name: nil,
+                              weapon: GASWeapon.create(game: game, id: .wpnStick),
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conFoodBread),
+                                          GASTreasure.create(game: game, id: .treGoldCoin)])
+        case .thug:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 25, name: nil,
+                              weapon: GASWeapon.create(game: game, id: .wpnBat),
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conFoodBread),
+                                          GASTreasure.create(game: game, id: .treGoldCoin),
+                                          GASWeapon.create(game: game, id: .wpnBat),
+                                          GASArmor.create(game: game, id: .armShieldWooden)])
+        case .jerk:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 25, name: nil,
+                              weapon: GASWeapon.create(game: game, id: .wpnSword),
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conFoodBread),
+                                          GASTreasure.create(game: game, id: .treGoldCoin),
+                                          GASTreasure.create(game: game, id: .treNecklace),
+                                          GASWeapon.create(game: game, id: .wpnSword)])
+        case .spider:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 40, name: nil,
+                              weapon: nil,
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conPotion),
+                                          GASTreasure.create(game: game, id: .treGoldCoin),
+                                          GASTreasure.create(game: game, id: .treNecklace),
+                                          GASWeapon.create(game: game, id: .treJewel)])
+        case .slime:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 80, name: nil,
+                              weapon: nil,
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conPotion),
+                                          GASTreasure.create(game: game, id: .treGoldCoin),
+                                          GASTreasure.create(game: game, id: .treNecklace),
+                                          GASTreasure.create(game: game, id: .treJewel),
+                                          GASWeapon.create(game: game, id: .wpnAxe),
+                                          GASArmor.create(game: game, id: .armShieldSteel)])
+        case .duck:
+            return GASMonster(type: type, scene: game.scene!, game: game,
+                              stats: statsForMonsterType(type),
+                              geometry: geometryForMonsterType(type),
+                              xpReward: 125, name: nil,
+                              weapon: GASWeapon.create(game: game, id: .wpnPistol),
+                              armor: nil,
+                              inventory: [GASConsumable.create(game: game, id: .conPotion),
+                                          GASTreasure.create(game: game, id: .treGoldCoin),
+                                          GASTreasure.create(game: game, id: .treNecklace),
+                                          GASTreasure.create(game: game, id: .treJewel),
+                                          GASWeapon.create(game: game, id: .wpnAxe),
+                                          GASArmor.create(game: game, id: .armShieldSteel)])
+        }
+    }
+
 }
 
-enum GASMonsterType : Int {
-    
-    case idiot = 1
-    case thug = 2
-    case jerk = 3
-    case spider = 4
-    case slime = 5
-    case duck = 6
-    
+func statsForMonsterType(_ type: GASMonsterType) -> GASUnitStats {
+    switch(type) {
+    case .idiot:
+        return GASUnitStats(health: 12, strength: 1, speed: 4, damage: 2)
+    case .thug:
+        return GASUnitStats(health: 30, strength: 3, speed: 1, damage: 1)
+    case .jerk:
+        return GASUnitStats(health: 20, strength: 2, speed: 2, damage: 2)
+    case .spider:
+        return GASUnitStats(health: 30, strength: 3, speed: 4, damage: 6)
+    case .slime:
+        return GASUnitStats(health: 50, strength: 4, speed: 1, damage: 8)
+    case .duck:
+        return GASUnitStats(health: 70, strength: 2, speed: 2, damage: 3)
+    }
+}
+
+func geometryForMonsterType(_ type: GASMonsterType) -> GASSceneObjectGeometry {
+    switch(type) {
+    case .idiot:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 512)
+    case .thug:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 512)
+    case .jerk:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 768)
+    case .spider:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 512)
+    case .slime:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 512)
+    case .duck:
+        return GASSceneObjectGeometry(x: 0, y: 0, width: 512, height: 512)
+    }
 }
 
 

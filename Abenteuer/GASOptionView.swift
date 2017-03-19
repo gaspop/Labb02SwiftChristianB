@@ -54,7 +54,6 @@ class GASOptionView {
         self.zPosition = zPosition
         self.view = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, parent: self.parent, onTouch: nil)
         self.view.zPosition = self.zPosition
-        //self.parent.addChild(self.view)
         
         var buttons : [GASButton] = []
         for (i,o) in options.enumerated() {
@@ -71,14 +70,13 @@ class GASOptionView {
         for o in options {
             o.clear()
         }
+        self.view.removeAllActions()
         self.view.removeFromParent()
     }
     
     func animate(action: SKAction, completion: (() -> Void)?) {
         view.run(action) {
-            //NSLog("GASOptionView.animate: Start animation.")
             if let completion = completion {
-                //NSLog("GASOptionView.animate: Completion closure.")
                 completion()
             }
         }

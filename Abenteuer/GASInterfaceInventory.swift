@@ -51,12 +51,6 @@ class GASInterfaceInventory {
         self.inventoryViewSize = parent.size.height * inventoryViewScreenShare
         self.inventoryViewScale = inventoryViewSize / inventoryViewMaxSize
         self.inventoryViewMargin = (parent.size.width - inventoryViewSize) / 2
-        
-        /*
-        self.inventoryView = GASInventoryView(parent: parent, source: source, rows: 6, columns: 6, size: inventoryViewSize, scale: inventoryViewScale, onItemTouch: { _ in } )
-        
-        self.inventoryView.position = CGPoint(x: inventoryViewMargin, y: inventoryViewMargin)
-        */
     }
     
     func displayOptions(_ options: [GASOptionViewData]) {
@@ -152,6 +146,17 @@ class GASInterfaceInventory {
                         deselectAndUpdate()
                     }))
                 }
+            }  else if let item = item as? GASConsumable {
+                options.append(GASOptionViewData(text: "Consume", closure: {
+                    let previousHealth = player.stats.health
+                    player.stats.health = min(player.stats.maxHealth, player.stats.health + item.healthGain)
+                    NSLog("Player has gained \(player.stats.health - previousHealth) hitpoints.")
+                    if let index = player.inventory.index(where:  { $0.id == item.id } ) {
+                        player.inventory.remove(at: index)
+                    }
+                    self.inventoryView!.update()
+                    deselectAndUpdate()
+                }))
             }
             options.append(GASOptionViewData(text: "Drop item", closure: {
                 self.game.scene!.loot.inventory.append(item)
@@ -172,9 +177,7 @@ class GASInterfaceInventory {
         options.append(GASOptionViewData(text: "Close", closure: {
             self.clearInventoryView()
             self.clearInventoryOptions()
-            //self.game.newPlayerMove(
             GASEvent.next()
-            //self.drawInterfacePlayerOptions(options: self.game.options)
         } ))
         
         displayOptions(options)
@@ -219,7 +222,6 @@ class GASInterfaceInventory {
                     self.inventoryView!.source.inventory = []
                     self.clearInventoryView()
                     self.clearInventoryOptions()
-                    //self.game.newPlayerMove(
                     GASEvent.next()
                 }))
             }
@@ -228,7 +230,6 @@ class GASInterfaceInventory {
         options.append(GASOptionViewData(text: "Close", closure: {
             self.clearInventoryView()
             self.clearInventoryOptions()
-            //self.game.newPlayerMove()
             GASEvent.next()
         } ))
         

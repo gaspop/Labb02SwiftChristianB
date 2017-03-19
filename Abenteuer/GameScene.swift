@@ -9,11 +9,6 @@
 import SpriteKit
 import GameplayKit
 
-enum GameInterfaceAction {
-    case normal
-    case selectNewTarget
-}
-
 class GameScene: SKScene {
     
     public let viewScreenShare : CGFloat = 0.45
@@ -27,351 +22,61 @@ class GameScene: SKScene {
     
     private var lastEventId : Int = 0
     
-    var gameView : GASGameView!
-    var inventoryView : GASInventoryView!
-    var buttons : [GASButton] = []
-    
     var game : GASGame!
-    var sceneFrame : SKShapeNode!
     var gameInterface : GASInterfaceGame!
     var inventoryInterface : GASInterfaceInventory!
-    
-    //var sceneView : SKSpriteNode!
+    var mainMenuInterface : GASInterfaceMainMenu!
     
     override func didMove(to view: SKView) {
         
         anchorPoint = GASPivot.topLeft
         
-        game = GASGame()
-        game.player = GASPlayer(game: game,
-                                name: "Ture",
-                                stats: GASUnitStats(health: 200, strength: 1, speed: 3, damage: 1),
-                                geometry: GASSceneObjectGeometry())
-        game.player!.inventory = [GASWeapon.create(game: game, id: .wpnSword),
-                                  GASArmor.create(game: game, id: .armShieldWooden),
-                                  GASWeapon.create(game: game, id: .wpnSword)]
-        game.player!.weapon = GASWeapon.create(game: game, id: .wpnPistol)
-        game.player!.armor = GASArmor.create(game: game, id: .armShieldSteel)
-        
         viewSize = size.height * viewScreenShare
         viewScale = viewSize / maxViewSize
         viewGap = (size.width - viewSize) / 2
         
-        /*
-        let test = GASSprite(imageNamed: "Spaceship")
-        addChild(test)
-        test.position(0,0)
-        */
-        //let test = GASRectangle(rectOf: CGSize(width: 256, height: 256), radius: 16, color: UIColor.green, name: nil, parent: self)
-        //addChild(test)
-        //test.pivotMode = .topLeft
-        //test.position(0,0)
-        //test.zPosition = 1
-        //test.x = 0
-        //test.y = 0
-        //drawTest()
-    }
-    /*
-    func drawInventory(container: GASContainer) {
-        clearInterfaceButtons()
-        if let inventoryView = self.inventoryView {
-            inventoryView.close()
-            self.inventoryView = nil
-        }
-        
-        self.inventoryView = GASInventoryView(parent: self, source: container,
-                                              rows: 5, columns: 5, size: viewSize, scale: viewScale,
-                                              overlay: nil, onItemTouch: {
-                                                item in
-                                                self.inventoryView!.selected = item
-                                                self.drawInventoryOptions()
-        })
-        self.inventoryView!.position = CGPoint(x: viewGap,y: viewGap)
-        self.inventoryView!.draw()
-        self.drawInventoryOptions()
-        
-    }
-    
-    func drawInventoryOptions() {
-        clearInterfaceButtons()
-        var textAndClosure : [(String,() -> Void)] = []
-        if let player = game.player {
-            if let item = inventoryView?.selected {
-                textAndClosure.append(("Take", {
-                    player.inventory.append(item)
-                    if let index = self.inventoryView!.source.inventory.index(where:  { $0.id == item.id } ) {
-                        self.inventoryView!.source.inventory.remove(at: index)
-                    }
-                    self.inventoryView!.selected = nil
-                    self.inventoryView!.update()
-                    self.drawInventoryOptions()
-                }))
-            }
-            if inventoryView!.source.inventory.count > 0 {
-                textAndClosure.append(("Take all", {
-                    for i in self.inventoryView!.source.inventory {
-                        player.inventory.append(i)
-                    }
-                    self.inventoryView!.source.inventory = []
-                    self.inventoryView!.close()
-                    self.inventoryView = nil
-                    self.game.generateOptions()
-                    self.drawInterfacePlayerOptions(options: self.game.options)
-                }))
-            }
-        }
-        
-        
-        
-        textAndClosure.append(("Close", {
-            self.inventoryView!.close()
-            self.inventoryView = nil
-            self.game.generateOptions()
-            self.drawInterfacePlayerOptions(options: self.game.options)
-        } ))
-        
-        let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
-        let buttonStartY = (viewGap * 2) + inventoryView!.size.height
-        
-        for (index, tuple) in textAndClosure.enumerated() {
-            drawInterfaceButton(parent: self,
-                                position: CGPoint(x: viewGap, y: buttonStartY + (buttonGap * CGFloat(index))),
-                                text: tuple.0, onTouch: tuple.1 )
-        }
+        mainMenuInterface = GASInterfaceMainMenu(parent: self)
+        mainMenuInterface.displayOptions()
     }
 
-    func drawPlayerInventory() {
-        clearInterfaceButtons()
-        if let inventoryView = self.inventoryView {
-            inventoryView.close()
-            self.inventoryView = nil
-        }
-        
-        if let player = game.player {
-            self.inventoryView = GASInventoryView(parent: self,
-                                                  source: player,
-                                                  rows: 5, columns: 5, size: viewSize, scale: viewScale,
-                                                  overlay: nil,
-                                                  onItemTouch: {
-                                                    item in
-                                                    self.inventoryView!.selected = item
-                                                    self.drawPlayerInventoryOptions()
-                                                    
-                                                  })
-            self.inventoryView!.position = CGPoint(x: viewGap,y: viewGap)
-            self.inventoryView!.draw()
-            self.drawPlayerInventoryOptions()
-        }
-    }
-    
-    func drawPlayerInventoryOptions() {
-        clearInterfaceButtons()
-        var textAndClosure : [(String,() -> Void)] = []
-        if let player = game.player,
-           let item = inventoryView?.selected {
-            var isSelectedWeaponId = false
-            var isSelectedArmorId = false
-            
-            if let item = item as? GASWeapon {
-                if let current = player.weapon,
-                    current.id == item.id {
-                    isSelectedWeaponId = true
-                    textAndClosure.append(("Remove", {
-                        player.weapon = nil
-                        self.deselectAndUpdate()
-                    }))
-
-                } else {
-                    textAndClosure.append(("Equip", {
-                        player.weapon = item
-                        self.deselectAndUpdate()
-                    }))
-                }
-            } else if let item = item as? GASArmor {
-                if let current = player.armor,
-                    current.id == item.id {
-                        isSelectedArmorId = true
-                        textAndClosure.append(("Remove", {
-                            player.armor = nil
-                            self.deselectAndUpdate()
-                        }))
-                } else {
-                    textAndClosure.append(("Equip", {
-                        player.armor = item
-                        self.deselectAndUpdate()
-                    }))
-                }
-            }
-            textAndClosure.append(("Drop item", {
-                self.game.scene!.loot.inventory.append(item)
-                if let index = player.inventory.index(where:  { $0.id == item.id } ) {
-                    player.inventory.remove(at: index)
-                }
-                if isSelectedWeaponId {
-                    player.weapon = nil
-                }
-                if isSelectedArmorId {
-                    player.armor = nil
-                }
-                self.inventoryView!.update()
-                self.deselectAndUpdate()
-            } ))
-        }
-        
-        textAndClosure.append(("Close", {
-            self.inventoryView!.close()
-            self.inventoryView = nil
-            self.game.generateOptions()
-            self.drawInterfacePlayerOptions(options: self.game.options)
-        } ))
-        
-        let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
-        let buttonStartY = (viewGap * 2) + inventoryView!.size.height
-        
-        for (index, tuple) in textAndClosure.enumerated() {
-            drawInterfaceButton(parent: self,
-                                position: CGPoint(x: viewGap, y: buttonStartY + (buttonGap * CGFloat(index))),
-                                text: tuple.0, onTouch: tuple.1 )
-        }
-    }
-    
-    func deselectAndUpdate() {
-        self.inventoryView!.selected = nil
-        self.drawPlayerInventoryOptions()
-    }
-    */
-    func drawInterfaceGame() {
+    func setupInterfaceGame() {
         gameInterface = GASInterfaceGame(parent: self)
         gameInterface.gameView.drawScene()
         inventoryInterface = GASInterfaceInventory(parent: self)
     }
     
-    func clearInterfaceButtons() {
-        for b in buttons {
-            b.clear()
-        }
-        buttons = []
-    }
-    /*
-    func drawInterfaceButton(parent: SKNode, position: CGPoint, text: String, onTouch: (() -> Void)?) {
+    func setupNewGame() {
+        game = GASGame()
+        game.player = GASPlayer(game: game,
+                                name: "Ture",
+                                stats: GASUnitStats(health: 120, strength: 1, speed: 3, damage: 2),
+                                geometry: GASSceneObjectGeometry())
+        game.player!.weapon = GASWeapon.create(game: game, id: .wpnBat)
+        game.player!.armor = nil
+        game.player!.inventory = [game.player!.weapon!, GASConsumable.create(game: game, id: .conFoodBread)]
         
-        let buttonSize = CGSize(width: viewSize, height: buttonHeight * viewScale)
-        let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
-        
-        let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.brown,
-                                       parent: nil, onTouch: nil)
-        let button = GASButton(parent: parent, shape: buttonShape, sprite: nil,
-                               text: text, textColor: nil, font: buttonFont,
-                               onTouch: onTouch)
-        button.position = CGPoint(x: position.x, y: position.y)
-        //button.setPosition(position.x, position.y)
-        buttons.append(button)
     }
     
-    func drawInterfacePlayerOptions(options: [GASGameOption]?) {
-        clearInterfaceButtons()
-        
-        let buttonGap = (self.buttonHeight * viewScale) + (self.buttonGap * viewScale)
-        let buttonStartY = (viewGap * 2) + viewSize
-        
-        if let options = options {
-            for (index,o) in options.enumerated() {
-                drawInterfaceButton(parent: self,
-                                    position: CGPoint(x: viewGap, y: buttonStartY + (buttonGap * CGFloat(index))),
-                                    text: o.text, onTouch: actionForOption(o.type))
-            }
-        }
-        
-    }
-     */
-    /*
-    func actionForOption(_ type: GASGameOptionType) -> (() -> Void)? {
-        switch(type) {
-        case .attack:       return {
-            self.game.continueBattle()
-            self.gameView.drawMonsters()
-            self.drawInterfacePlayerOptions(options: self.game.options)
-            }
-        case .continue:     return {
-            self.game.continueBattle()
-            self.gameView.drawMonsters()
-            self.drawInterfacePlayerOptions(options: self.game.options)
-            }
-        case .travel:       return {
-            GASEvent.new(GASSceneEvent(.newScene))
-            }
-        case .inventory:    return {
-            self.drawPlayerInventory()
-            }
-        case .gather:       return {
-            self.drawInventory(container: self.game.scene!.loot)
-            }
-        case .search:       return {
-            self.drawInventory(container: self.game.scene!.containers.first!)
-            }
-        //default:
-        //    return nil
-        }
-    }
-    */
-    /*func drawTest() {
-        let buttonSide = 256 * viewScale
-        let buttonSize = CGSize(width: buttonSide, height: buttonSide)
-        let buttonImage = GASSprite(imageNamed: "Spaceship", size: nil, name: nil, parent: nil)
-        
-            //let buttonShape = SKShapeNode(rectOf: buttonSize, cornerRadius: 4.0)
-            //buttonShape.fillColor = UIColor.orange
-            //buttonShape.strokeColor = UIColor.orange
-        let buttonShape = GASRectangle(rectOf: buttonSize, radius: 4.0, color: UIColor.orange, name: "test", parent: nil)
-            let buttonFont = UIFont(name: "Helvetica", size: 64 * viewScale)
-            let button = GASButton(parent: self,
-                                   identifier: "test",
-                                   size: buttonSize,
-                                   shape: buttonShape,
-                                   sprite: buttonImage,
-                                   text: nil,
-                                   textColor: nil,
-                                   font: buttonFont)
-            button.position((size.width / 2) - (buttonSide / 2), size.height - buttonSide - viewGap)
-            
-    }*/
     
+
     func touchDown(atPoint pos : CGPoint) {
-        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }*/
- 
+
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }*/
+
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        /*if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }*/
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        /*if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }*/
-        
+
         for t in touches {
             self.touchDown(atPoint: t.location(in: self))
             
         }
-        
-        
         
     }
     
@@ -392,7 +97,6 @@ class GameScene: SKScene {
         // Called before each frame is rendered
         if let event = GASEvent.current {
             if event.eventId != lastEventId || !event.hold {
-                //NSLog("update: Trigger handleEvent")
                 handleEvent(event)
             }
         } else {
@@ -413,10 +117,13 @@ class GameScene: SKScene {
         }
         lastEventId = event.eventId
         
-        if !event.hold {
-            GASEvent.next()
-            if let nextEvent = GASEvent.current {
-                handleEvent(nextEvent)
+        if let currentEvent = GASEvent.current {
+            if event.eventId == currentEvent.eventId && !event.hold {
+                print("handleEvent calling next")
+                GASEvent.next()
+                if let nextEvent = GASEvent.current {
+                    handleEvent(nextEvent)
+                }
             }
         }
     }
@@ -425,20 +132,18 @@ class GameScene: SKScene {
         NSLog("handleGameEvent: \(event.type)   id: \(event.eventId)")
         switch(event.type) {
         case .newGame:
-            
-            //game.newScene()
-            //game.newBattle()
-            //game.startBattle()
-            //game.generateOptions()
-            
-            viewSize = size.height * viewScreenShare
-            viewScale = viewSize / maxViewSize
-            viewGap = (size.width - viewSize) / 2
-            
-            drawInterfaceGame()
+            setupInterfaceGame()
             game.newScene()
-            //drawInterfacePlayerOptions(options: game.options)
-            //GASEvent.next()
+            
+        case .gameReset:
+            gameInterface.close()
+            mainMenuInterface.displayOptions()
+            
+        case .gameEnd:
+            gameInterface.displayMessage("You have succumed to your wounds and died. You managed to reach level \(game.player!.level). Game over, dude!")
+            
+        case .playerLevelUp:
+            gameInterface.displayMessage("You have gained a level, you are now at level \(game.player!.level). You will require \(game.player!.experienceLimit) experience to reach the next level.")
         case .showInventory:
             break
         case .showContainer:
@@ -457,14 +162,11 @@ class GameScene: SKScene {
         NSLog("handleSceneEvent: \(event.type)   id: \(event.eventId)")
         switch(event.type) {
         case .newScene:
-            //game.newScene()
             gameInterface.gameView.drawScene()
-            //self.game.newBattle()
-            //self.game.evaluateBattle()
-            //self.game.generateOptions()
-            //self.gameView.drawScene()
-            //self.drawInterfacePlayerOptions(options: self.game.options!)
-            //GASEvent.next()
+        
+        case .describeScene:
+            gameInterface.displayMessage(game.scene!.describeScene())
+            
         case .playerMakeMove:
             gameInterface.generatePlayerOptions()
         /*default:
@@ -477,41 +179,61 @@ class GameScene: SKScene {
         NSLog("handleBattleEvent: \(event.type)   id: \(event.eventId)")
         switch(event.type) {
         case .battleStart:
-            break
+            gameInterface.displayMessage(("There are monsters here. Prepare for battle!"))
             
         case .battleEnd:
-            break //game.endBattle()
+            gameInterface.displayMessage(("You have emerged victorious from the battle!"))
             
         case .newTurnForPlayer:
             gameInterface.generatePlayerOptions()
             
         case .newTurnForMonster:
-            gameInterface.generatePauseOptions()
+            game.battle!.takeTurn()
             
         case .playerAttacks:
-            break //GASEvent.next()
-            
-        case .playerHitTarget:
-            break //GASEvent.next()
-            
-        case .playerMissTarget:
-            break //GASEvent.next()
-            
-        case .playerDies:
             break
             
+        case .playerHitTarget:
+            let monster = game.scene!.monsters.filter( { $0.id == event.targetId } ).first!
+            let message = "You hit the \(monster.type) for \(Int(event.value)) points!"
+            gameInterface.displayMessage(message)
+            break
+            
+        case .playerMissTarget:
+            let monster = game.scene!.monsters.filter( { $0.id == event.targetId } ).first!
+            let message = "You screw up royally and swing completely in the wrong direction, missing the \(monster.type)."
+            gameInterface.displayMessage(message)
+            
+        case .playerDies:
+            GASEvent.clearAll()
+            GASEvent.new(GASGameEvent(.gameEnd, hold: true))
+            GASEvent.new(GASGameEvent(.gameReset))
+            
+        case .playerFinishedTurn:
+            gameInterface.generatePauseOptions()
+            
         case .monsterAttacks:
-            GASEvent.next()
+            break
             
         case .monsterHitTarget:
-            GASEvent.next()
+            let monster = game.scene!.monsters.filter( { $0.id == event.unitId } ).first!
+            let message = "The \(monster.type) hits you for \(Int(event.value)) points!"
+            gameInterface.displayMessage(message)
             
         case .monsterMissTarget:
-            GASEvent.next()
+            let monster = game.scene!.monsters.filter( { $0.id == event.unitId } ).first!
+            let message = "The \(monster.type) fails miserably and misses you."
+            gameInterface.displayMessage(message)
             
         case .monsterDies:
+            print("Unit: \(event.unitId)   Target: \(event.targetId)")
+            let monster = game.scene!.monsters.filter( { $0.id == event.targetId } ).first!
+            let message = "You have defeated the \(monster.type) and gain \(monster.experienceReward) experience points!"
             gameInterface.gameView.drawMonsters()
-            GASEvent.next()
+            gameInterface.displayMessage(message)
+        
+        case .monsterFinishedTurn:
+            GASEvent.finish()
         /*
         default:
             NSLog("handleBattleEvent: Missing event handler.")

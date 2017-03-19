@@ -13,14 +13,6 @@ enum GASEventType {
     case game
     case scene
     case battle
-    //case undefined = 0
-    //case playerNewTurn = 1
-    //case playerAttack = 2
-    //case playerHitTarget = 3
-    //case playerMissTarget = 4
-    //case monsterNewTurn = 2
-    //case monsterAttack = 3
-    //case monster
 }
 
 class GASEvent {
@@ -48,11 +40,25 @@ class GASEvent {
     static func next() {
         finish()
         if current != nil {
+            var shit = ""
+            if let event = current! as? GASGameEvent {
+                shit = "\(event.type)"
+            } else if let event = current! as? GASSceneEvent {
+                shit = "\(event.type)"
+            } else if let event = current! as? GASBattleEvent {
+                shit = "\(event.type)"
+            }
+            print("jumping to next from: \(shit)")
             events.remove(at: 0)
         }
         if GASEvent.events.count == 0 {
             GASEvent.count = 0
         }
+    }
+    
+    static func clearAll() {
+        events = []
+        GASEvent.count = 0
     }
 
     let eventType : GASEventType
@@ -64,6 +70,20 @@ class GASEvent {
         self.eventType = type
         self.eventId = GASEvent.count
         self.hold = hold
+    }
+    
+    static func list() -> String {
+        var list = "Events:"
+        for e in events {
+            if let event = e as? GASGameEvent {
+                list += "\n\(event.type)"
+            } else if let event = e as? GASSceneEvent {
+                list += "\n\(event.type)"
+            } else if let event = e as? GASBattleEvent {
+                list += "\n\(event.type)"
+            }
+        }
+        return list
     }
     
 }
