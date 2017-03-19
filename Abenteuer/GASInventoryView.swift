@@ -61,7 +61,6 @@ class GASInventoryView {
     var selected : GASItem?
     
     private let view : GASRectangle
-    let overlay : GASRectangle?
     var itemSlots : [GASSprite]
     var itemViews : [GASItemView]
     
@@ -82,7 +81,7 @@ class GASInventoryView {
                 let slot = GASSprite(imageNamed: "inventorySlot",
                                      size: CGSize(width: itemSize, height: itemSize),
                                      parent: self.view, onTouch: nil)
-                slot.anchorPoint = GASNodePivot.center
+                slot.anchorPoint = GASPivot.center
                 slot.position = CGPoint(x: (itemSize / 2) + itemSize * CGFloat(col),
                                         y: (itemSize / 2) + itemSize * CGFloat(row))
                 slot.zRotation = CGFloat(90 * random(4)) * 3.14 / 180
@@ -108,7 +107,6 @@ class GASInventoryView {
                     itemView.image.setPosition(itemSize * CGFloat(col), itemSize * CGFloat(row))
                     itemView.image.zPosition = self.parent.zPosition + 0.2
                     itemViews.append(itemView)
-                    //nodes.append(itemView.image)
                     itemIndex += 1
                 }
             }
@@ -128,14 +126,10 @@ class GASInventoryView {
             s.removeFromParent()
         }
         view.removeFromParent()
-        if let overlay = self.overlay {
-            overlay.removeFromParent()
-        }
-        
     }
     
     init(parent: GameScene, source: GASInventory, rows: Int, columns: Int,
-         size: CGFloat, scale: CGFloat, overlay: GASRectangle?, onItemTouch: @escaping (GASItem) -> Void) {
+         size: CGFloat, scale: CGFloat, onItemTouch: @escaping (GASItem) -> Void) {
         self.parent = parent
         self.source = source
         self.itemSlots = []
@@ -153,13 +147,6 @@ class GASInventoryView {
                                  parent: self.parent, onTouch: nil)
         self.view.zPosition = GASInventoryView.zPosition
         
-        if let overlay = overlay {
-            self.overlay = overlay
-            overlay.isUserInteractionEnabled = true
-            overlay.zPosition = self.view.zPosition - 0.1
-        } else {
-            self.overlay = nil
-        }
     }
     
     func itemImageForTypeId(id: GASItemTypeId) -> String {

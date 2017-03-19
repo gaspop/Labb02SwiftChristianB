@@ -8,12 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CDE1E743972004FBB3E /* GASRectangle.swift */; };
-		371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */; };
+		371A8CE11E7446FD004FBB3E /* GASPivot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE01E7446FD004FBB3E /* GASPivot.swift */; };
 		371A8CE31E74B5A5004FBB3E /* GASHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE21E74B5A5004FBB3E /* GASHelper.swift */; };
 		371A8CE61E74B858004FBB3E /* GASSceneObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE51E74B858004FBB3E /* GASSceneObject.swift */; };
 		371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE71E74BAD1004FBB3E /* GASScenery.swift */; };
 		371A8CEA1E74C2F6004FBB3E /* GASContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CE91E74C2F6004FBB3E /* GASContainer.swift */; };
 		371A8CEC1E74C3C9004FBB3E /* GASUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */; };
+		374114B41E7E00C700D3202F /* GASInterfaceInventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374114B31E7E00C700D3202F /* GASInterfaceInventory.swift */; };
+		375059061E7D625A00B7BA5C /* GASSceneEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375059051E7D625A00B7BA5C /* GASSceneEvent.swift */; };
+		375059081E7D62ED00B7BA5C /* GASGameEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375059071E7D62ED00B7BA5C /* GASGameEvent.swift */; };
+		375059131E7D7BC500B7BA5C /* GASInterfaceGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375059121E7D7BC500B7BA5C /* GASInterfaceGame.swift */; };
+		375059161E7DB8FF00B7BA5C /* GASOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375059151E7DB8FF00B7BA5C /* GASOptionView.swift */; };
 		37683D4F1E79863300A8F431 /* GASInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37683D4E1E79863300A8F431 /* GASInventoryView.swift */; };
 		3786B1AA1E756F230021A2FB /* GASMonster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3786B1A91E756F230021A2FB /* GASMonster.swift */; };
 		3786B1AC1E756FFE0021A2FB /* GASPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */; };
@@ -34,17 +39,24 @@
 		379C2D9E1E70867500774A54 /* GASGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C2D9D1E70867500774A54 /* GASGame.swift */; };
 		379C2DA01E70868F00774A54 /* GASScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C2D9F1E70868F00774A54 /* GASScene.swift */; };
 		379C2DA21E70875800774A54 /* GASSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C2DA11E70875800774A54 /* GASSprite.swift */; };
+		37AD0BB61E7C30DC00EE4EF5 /* GASEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AD0BB51E7C30DC00EE4EF5 /* GASEvent.swift */; };
+		37AD0BB81E7C3E3D00EE4EF5 /* GASBattleEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AD0BB71E7C3E3D00EE4EF5 /* GASBattleEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		371A8CDE1E743972004FBB3E /* GASRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASRectangle.swift; sourceTree = "<group>"; };
-		371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASNodeProtocol.swift; sourceTree = "<group>"; };
+		371A8CDE1E743972004FBB3E /* GASRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GASRectangle.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		371A8CE01E7446FD004FBB3E /* GASPivot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GASPivot.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		371A8CE21E74B5A5004FBB3E /* GASHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASHelper.swift; sourceTree = "<group>"; };
 		371A8CE51E74B858004FBB3E /* GASSceneObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASSceneObject.swift; sourceTree = "<group>"; };
 		371A8CE71E74BAD1004FBB3E /* GASScenery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASScenery.swift; sourceTree = "<group>"; };
 		371A8CE91E74C2F6004FBB3E /* GASContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASContainer.swift; sourceTree = "<group>"; };
 		371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASUnit.swift; sourceTree = "<group>"; };
-		37683D4E1E79863300A8F431 /* GASInventoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASInventoryView.swift; sourceTree = "<group>"; };
+		374114B31E7E00C700D3202F /* GASInterfaceInventory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASInterfaceInventory.swift; sourceTree = "<group>"; };
+		375059051E7D625A00B7BA5C /* GASSceneEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASSceneEvent.swift; sourceTree = "<group>"; };
+		375059071E7D62ED00B7BA5C /* GASGameEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGameEvent.swift; sourceTree = "<group>"; };
+		375059121E7D7BC500B7BA5C /* GASInterfaceGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASInterfaceGame.swift; sourceTree = "<group>"; };
+		375059151E7DB8FF00B7BA5C /* GASOptionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASOptionView.swift; sourceTree = "<group>"; };
+		37683D4E1E79863300A8F431 /* GASInventoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GASInventoryView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3786B1A91E756F230021A2FB /* GASMonster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASMonster.swift; sourceTree = "<group>"; };
 		3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASPlayer.swift; sourceTree = "<group>"; };
 		3786B1AD1E757C810021A2FB /* GASItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASItem.swift; sourceTree = "<group>"; };
@@ -52,12 +64,12 @@
 		3786B1B11E75959D0021A2FB /* GASArmor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASArmor.swift; sourceTree = "<group>"; };
 		3786B1B31E75D6350021A2FB /* GASBattle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASBattle.swift; sourceTree = "<group>"; };
 		378D7D251E71689900CBAF96 /* GASGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGameView.swift; sourceTree = "<group>"; };
-		378D7D271E71942000CBAF96 /* GASButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASButton.swift; sourceTree = "<group>"; };
+		378D7D271E71942000CBAF96 /* GASButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GASButton.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		379C2D821E70623500774A54 /* Abenteuer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abenteuer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		379C2D851E70623500774A54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		379C2D871E70623500774A54 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		379C2D891E70623500774A54 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
-		379C2D8B1E70623500774A54 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		379C2D8B1E70623500774A54 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GameScene.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		379C2D8D1E70623500774A54 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		379C2D901E70623500774A54 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		379C2D921E70623500774A54 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,7 +77,9 @@
 		379C2D971E70623500774A54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		379C2D9D1E70867500774A54 /* GASGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASGame.swift; sourceTree = "<group>"; };
 		379C2D9F1E70868F00774A54 /* GASScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASScene.swift; sourceTree = "<group>"; };
-		379C2DA11E70875800774A54 /* GASSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASSprite.swift; sourceTree = "<group>"; };
+		379C2DA11E70875800774A54 /* GASSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GASSprite.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		37AD0BB51E7C30DC00EE4EF5 /* GASEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASEvent.swift; sourceTree = "<group>"; };
+		37AD0BB71E7C3E3D00EE4EF5 /* GASBattleEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GASBattleEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,14 +99,100 @@
 				371A8CE51E74B858004FBB3E /* GASSceneObject.swift */,
 				371A8CE71E74BAD1004FBB3E /* GASScenery.swift */,
 				371A8CE91E74C2F6004FBB3E /* GASContainer.swift */,
-				371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */,
-				3786B1A91E756F230021A2FB /* GASMonster.swift */,
-				3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */,
 				3786B1AD1E757C810021A2FB /* GASItem.swift */,
+				3750590C1E7D74E500B7BA5C /* Items */,
+				371A8CEB1E74C3C9004FBB3E /* GASUnit.swift */,
+				3750590D1E7D750B00B7BA5C /* Units */,
+			);
+			name = SceneObjects;
+			sourceTree = "<group>";
+		};
+		375059091E7D745B00B7BA5C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				37AD0BB51E7C30DC00EE4EF5 /* GASEvent.swift */,
+				37AD0BB71E7C3E3D00EE4EF5 /* GASBattleEvent.swift */,
+				375059071E7D62ED00B7BA5C /* GASGameEvent.swift */,
+				375059051E7D625A00B7BA5C /* GASSceneEvent.swift */,
+			);
+			name = Events;
+			sourceTree = "<group>";
+		};
+		3750590A1E7D747B00B7BA5C /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				379C2D871E70623500774A54 /* GameScene.sks */,
+				379C2D891E70623500774A54 /* Actions.sks */,
+				379C2D8D1E70623500774A54 /* GameViewController.swift */,
+			);
+			name = Base;
+			sourceTree = "<group>";
+		};
+		3750590B1E7D74AA00B7BA5C /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				371A8CE01E7446FD004FBB3E /* GASPivot.swift */,
+				371A8CDE1E743972004FBB3E /* GASRectangle.swift */,
+				379C2DA11E70875800774A54 /* GASSprite.swift */,
+				375059101E7D763800B7BA5C /* Collections */,
+			);
+			name = Nodes;
+			sourceTree = "<group>";
+		};
+		3750590C1E7D74E500B7BA5C /* Items */ = {
+			isa = PBXGroup;
+			children = (
 				3786B1AF1E7581CF0021A2FB /* GASWeapon.swift */,
 				3786B1B11E75959D0021A2FB /* GASArmor.swift */,
 			);
-			name = SceneObjects;
+			name = Items;
+			sourceTree = "<group>";
+		};
+		3750590D1E7D750B00B7BA5C /* Units */ = {
+			isa = PBXGroup;
+			children = (
+				3786B1A91E756F230021A2FB /* GASMonster.swift */,
+				3786B1AB1E756FFE0021A2FB /* GASPlayer.swift */,
+			);
+			name = Units;
+			sourceTree = "<group>";
+		};
+		3750590E1E7D75A500B7BA5C /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				379C2D9D1E70867500774A54 /* GASGame.swift */,
+				379C2D9F1E70868F00774A54 /* GASScene.swift */,
+				3786B1B31E75D6350021A2FB /* GASBattle.swift */,
+				371A8CE41E74B82C004FBB3E /* SceneObjects */,
+			);
+			name = Game;
+			sourceTree = "<group>";
+		};
+		3750590F1E7D760300B7BA5C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				378D7D251E71689900CBAF96 /* GASGameView.swift */,
+				37683D4E1E79863300A8F431 /* GASInventoryView.swift */,
+				375059151E7DB8FF00B7BA5C /* GASOptionView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		375059101E7D763800B7BA5C /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				378D7D271E71942000CBAF96 /* GASButton.swift */,
+			);
+			name = Collections;
+			sourceTree = "<group>";
+		};
+		375059111E7D7B8D00B7BA5C /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				375059121E7D7BC500B7BA5C /* GASInterfaceGame.swift */,
+				374114B31E7E00C700D3202F /* GASInterfaceInventory.swift */,
+			);
+			name = Interface;
 			sourceTree = "<group>";
 		};
 		379C2D791E70623500774A54 = {
@@ -115,25 +215,18 @@
 			isa = PBXGroup;
 			children = (
 				379C2D851E70623500774A54 /* AppDelegate.swift */,
-				379C2D9D1E70867500774A54 /* GASGame.swift */,
-				379C2D9F1E70868F00774A54 /* GASScene.swift */,
-				3786B1B31E75D6350021A2FB /* GASBattle.swift */,
-				371A8CE41E74B82C004FBB3E /* SceneObjects */,
-				378D7D251E71689900CBAF96 /* GASGameView.swift */,
-				37683D4E1E79863300A8F431 /* GASInventoryView.swift */,
-				378D7D271E71942000CBAF96 /* GASButton.swift */,
+				375059111E7D7B8D00B7BA5C /* Interface */,
+				3750590A1E7D747B00B7BA5C /* Base */,
+				375059091E7D745B00B7BA5C /* Events */,
+				3750590E1E7D75A500B7BA5C /* Game */,
+				3750590B1E7D74AA00B7BA5C /* Nodes */,
+				3750590F1E7D760300B7BA5C /* Views */,
 				379C2D8B1E70623500774A54 /* GameScene.swift */,
-				379C2D871E70623500774A54 /* GameScene.sks */,
-				379C2D891E70623500774A54 /* Actions.sks */,
-				379C2D8D1E70623500774A54 /* GameViewController.swift */,
+				371A8CE21E74B5A5004FBB3E /* GASHelper.swift */,
 				379C2D8F1E70623500774A54 /* Main.storyboard */,
 				379C2D921E70623500774A54 /* Assets.xcassets */,
 				379C2D941E70623500774A54 /* LaunchScreen.storyboard */,
 				379C2D971E70623500774A54 /* Info.plist */,
-				371A8CE01E7446FD004FBB3E /* GASNodeProtocol.swift */,
-				371A8CDE1E743972004FBB3E /* GASRectangle.swift */,
-				379C2DA11E70875800774A54 /* GASSprite.swift */,
-				371A8CE21E74B5A5004FBB3E /* GASHelper.swift */,
 			);
 			path = Abenteuer;
 			sourceTree = "<group>";
@@ -215,15 +308,20 @@
 			files = (
 				3786B1AE1E757C810021A2FB /* GASItem.swift in Sources */,
 				371A8CDF1E743972004FBB3E /* GASRectangle.swift in Sources */,
+				375059061E7D625A00B7BA5C /* GASSceneEvent.swift in Sources */,
+				375059131E7D7BC500B7BA5C /* GASInterfaceGame.swift in Sources */,
 				371A8CEC1E74C3C9004FBB3E /* GASUnit.swift in Sources */,
 				371A8CE61E74B858004FBB3E /* GASSceneObject.swift in Sources */,
 				3786B1B01E7581CF0021A2FB /* GASWeapon.swift in Sources */,
 				379C2D8C1E70623500774A54 /* GameScene.swift in Sources */,
+				37AD0BB61E7C30DC00EE4EF5 /* GASEvent.swift in Sources */,
+				374114B41E7E00C700D3202F /* GASInterfaceInventory.swift in Sources */,
 				371A8CE31E74B5A5004FBB3E /* GASHelper.swift in Sources */,
+				37AD0BB81E7C3E3D00EE4EF5 /* GASBattleEvent.swift in Sources */,
 				3786B1B41E75D6350021A2FB /* GASBattle.swift in Sources */,
 				3786B1AC1E756FFE0021A2FB /* GASPlayer.swift in Sources */,
 				378D7D281E71942000CBAF96 /* GASButton.swift in Sources */,
-				371A8CE11E7446FD004FBB3E /* GASNodeProtocol.swift in Sources */,
+				371A8CE11E7446FD004FBB3E /* GASPivot.swift in Sources */,
 				379C2D9E1E70867500774A54 /* GASGame.swift in Sources */,
 				371A8CEA1E74C2F6004FBB3E /* GASContainer.swift in Sources */,
 				379C2D8E1E70623500774A54 /* GameViewController.swift in Sources */,
@@ -234,6 +332,8 @@
 				379C2D861E70623500774A54 /* AppDelegate.swift in Sources */,
 				371A8CE81E74BAD1004FBB3E /* GASScenery.swift in Sources */,
 				3786B1AA1E756F230021A2FB /* GASMonster.swift in Sources */,
+				375059161E7DB8FF00B7BA5C /* GASOptionView.swift in Sources */,
+				375059081E7D62ED00B7BA5C /* GASGameEvent.swift in Sources */,
 				378D7D261E71689900CBAF96 /* GASGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

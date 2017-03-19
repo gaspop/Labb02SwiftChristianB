@@ -53,6 +53,7 @@ class GASGame {
     var itemCount : Int
     
     init() {
+        GASEvent.new(GASGameEvent(.newGame))
         monsterCount = 0
         itemCount = 0
     }
@@ -62,7 +63,13 @@ class GASGame {
         let rndIndex = Int(arc4random_uniform(UInt32(rndScene.count)))
         NSLog("GASGame.newScene: index = \(rndIndex)   scene = \(rndScene[rndIndex])")
         scene = GASScene(game: self, id: rndScene[rndIndex])
-        
+        GASEvent.new(GASSceneEvent(.newScene))
+        if scene!.monsters.count > 0 {
+            newBattle()
+        } else {
+            newPlayerMove()
+            //GASEvent.new(GASSceneEvent(.playerMakeMove, hold: true))
+        }
     }
     
     func newBattle() {
@@ -73,9 +80,27 @@ class GASGame {
             combatants = Array(scene.monsters)
             combatants.append(player)
             battle = GASBattle(game: self, combatants: combatants)
+            //GASEvent.new(GASBattleEvent(type: .battleStart))
         } else {
             NSLog("GASGame.newBattle: Could not start new battle!")
+            endBattle()
         }
+    }
+    
+    func startBattle() {
+        if let battle = self.battle {
+            battle.evaluate()
+        }
+    }
+    
+    func endBattle() {
+        self.battle = nil
+        GASEvent.new(GASBattleEvent(.battleEnd))
+        newPlayerMove()
+    }
+    
+    func newPlayerMove() {
+        GASEvent.new(GASSceneEvent(.playerMakeMove, hold: true))
     }
     
     func continueBattle() {

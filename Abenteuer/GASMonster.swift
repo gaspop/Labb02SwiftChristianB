@@ -90,15 +90,21 @@ class GASMonster : GASSceneObject, GASUnit, GASInventory {
         
         NSLog("GASMonster.takedamage(): Monster '\(id)' took \(damageTaken) damage from a total of \(amount) dealt.")
         self.stats.health -= damageTaken
+        if !self.isAlive {
+            GASEvent.new(GASBattleEvent(.monsterDies))
+        }
     }
     
 }
 
 enum GASMonsterType : Int {
     
-    case hoodlum = 1
-    case slime = 2
-    case fiend = 3
+    case idiot = 1
+    case thug = 2
+    case jerk = 3
+    case spider = 4
+    case slime = 5
+    case duck = 6
     
 }
 

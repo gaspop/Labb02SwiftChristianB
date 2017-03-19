@@ -72,7 +72,7 @@ class GASButton {
         self.container.zPosition = parent.zPosition + 0.1
         self.shape = GASRectangle(rectOf: shape.size, radius: shape.cornerRadius, color: shape.fillColor, parent: container, onTouch: nil)
         self.shape.zPosition = parent.zPosition + 0.1
-        self.shape.anchorPoint = GASNodePivot.center
+        self.shape.anchorPoint = GASPivot.center
         self.shape.position = CGPoint(x: size.width / 2, y: size.height / 2)
 
         
@@ -81,7 +81,7 @@ class GASButton {
             let minShapeSide = min(size.width, size.height)
             let scale = minShapeSide / maxLength
             self.shape.addChild(sprite)
-            sprite.anchorPoint = GASNodePivot.center
+            sprite.anchorPoint = GASPivot.center
             sprite.size = CGSize(width: sprite.size.width * scale * 1.0, height: sprite.size.height * scale * 1.0)
             sprite.zPosition = sprite.parent!.zPosition + 0.1
         }
@@ -89,13 +89,17 @@ class GASButton {
         if let closure = onTouch {
             self.touchShape = GASRectangle(rectOf: self.size, radius: 0, color: UIColor.clear, parent: self.shape, onTouch: nil)
             self.touchShape!.zPosition = touchShape!.parent!.zPosition + 0.3
-            self.touchShape!.anchorPoint = GASNodePivot.center
+            self.touchShape!.anchorPoint = GASPivot.center
             self.onTouchClosure = {
-                self.shape.run(SKAction.scale(to: 0.9, duration: 0.1), completion: {
-                    self.shape.run(SKAction.scale(to: 1.0, duration: 0.1), completion: {
-                        closure()
+                if UserInteraction.isEnabled {
+                    UserInteraction.isEnabled = false
+                    self.shape.run(SKAction.scale(to: 0.9, duration: 0.1), completion: {
+                        self.shape.run(SKAction.scale(to: 1.0, duration: 0.1), completion: {
+                            closure()
+                            UserInteraction.isEnabled = true
+                        })
                     })
-                })
+                }
             }
             self.touchShape!.onTouchClosure = self.onTouchClosure
             self.touchShape!.isUserInteractionEnabled = true
@@ -118,6 +122,11 @@ class GASButton {
     }
     
     func clear() {
+        for c in self.container.children {
+            c.removeAllActions()
+            c.removeAllChildren()
+        }
+        self.container.removeAllActions()
         self.container.removeFromParent()
     }
     

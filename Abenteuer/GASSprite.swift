@@ -36,8 +36,8 @@ class GASSprite : SKSpriteNode {
     }*/
     
     /*
-    private var _pivotMode : GASNodePivot = .topLeft
-    var pivotMode : GASNodePivot {
+    private var _pivotMode : GASPivot = .topLeft
+    var pivotMode : GASPivot {
         get {
             return _pivotMode
         }
@@ -133,7 +133,7 @@ class GASSprite : SKSpriteNode {
             parent.addChild(self)
         }
         
-        self.anchorPoint = GASNodePivot.topLeft
+        self.anchorPoint = GASPivot.topLeft
         self.position = CGPoint(x: 0, y: 0)
         
         if let closure = onTouch {

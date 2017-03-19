@@ -54,10 +54,37 @@ class GASBattle {
         self._combatants = combatants
         self.turnList = []
         NSLog("GASBattle.init: New battle with \(combatants.count) combatants.")
+        GASEvent.new(GASBattleEvent(.battleStart))
         newRound()
+        evaluate()
     }
     
     //var currentTurn
+    
+    func evaluate() {
+        if !isBattleFinished {
+            if let unit = turnList.first {
+                if unit is GASPlayer {
+                    game.newPlayerMove()
+                    //GASEvent.new(GASBattleEvent(.newTurnForPlayer, hold: true))
+                } else {
+                    GASEvent.new(GASBattleEvent(.newTurnForMonster, hold: true))
+                }
+            } else {
+                newRound()
+                evaluate()
+            }
+        } else {
+            if playerIsAlive {
+                game.endBattle()
+                // GASEvent.new(GASBattleEvent(.battleEnd))
+            } else {
+                game.endBattle()
+                //GASEvent.new(GASBattleEvent(.playerDies))
+            }
+        }
+    
+    }
     
     func newRound() {
         //NSLog("GASBattle.newRound: Attempting to start new round.")
@@ -96,6 +123,7 @@ class GASBattle {
             } else {
                 unit.attack(target)
                 turnList.remove(at: 0)
+                evaluate()
             }
         } else {
             // Pick new target for unit
@@ -107,6 +135,7 @@ class GASBattle {
             } else {
                 NSLog("GASBattle.takeTurn: Unit '\(unit.id)' couldn't find any targets.")
                 turnList.remove(at: 0)
+                evaluate()
                 return
             }
             

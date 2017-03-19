@@ -46,7 +46,7 @@ class GASScene {
         monsters = []
         for i in 0..<(random(4)) {
             let gap = 256
-            let monster = GASMonster(type: .hoodlum,
+            let monster = GASMonster(type: .jerk,
                                      scene: self, game: self.game,
                                      stats: GASUnitStats(health: 50, strength: 2, speed: 2, damage: 2),
                                      geometry: GASSceneObjectGeometry(x: 256 + Float(gap * i), y: 0, width: 512, height: 768),

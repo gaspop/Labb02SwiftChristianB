@@ -153,7 +153,7 @@ class GASRectangle : SKShapeNode {
             parent.addChild(self)
         }
         
-        self.anchorPoint = GASNodePivot.topLeft
+        self.anchorPoint = GASPivot.topLeft
         self.position = CGPoint(x: 0, y: 0)
         
         if let closure = onTouch {

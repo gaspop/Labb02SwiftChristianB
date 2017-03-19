@@ -25,18 +25,22 @@ class GameScene: SKScene {
     public let buttonHeight : CGFloat = 128
     public let buttonGap : CGFloat = 64
     
+    private var lastEventId : Int = 0
+    
     var gameView : GASGameView!
-    var inventoryView : GASInventoryView?
+    var inventoryView : GASInventoryView!
     var buttons : [GASButton] = []
     
     var game : GASGame!
     var sceneFrame : SKShapeNode!
+    var gameInterface : GASInterfaceGame!
+    var inventoryInterface : GASInterfaceInventory!
     
     //var sceneView : SKSpriteNode!
     
     override func didMove(to view: SKView) {
         
-        anchorPoint = GASNodePivot.topLeft
+        anchorPoint = GASPivot.topLeft
         
         game = GASGame()
         game.player = GASPlayer(game: game,
@@ -48,17 +52,10 @@ class GameScene: SKScene {
                                   GASWeapon.create(game: game, id: .wpnSword)]
         game.player!.weapon = GASWeapon.create(game: game, id: .wpnPistol)
         game.player!.armor = GASArmor.create(game: game, id: .armShieldSteel)
-        game.newScene()
-        game.newBattle()
-        game.evaluateBattle()
-        game.generateOptions()
         
         viewSize = size.height * viewScreenShare
         viewScale = viewSize / maxViewSize
         viewGap = (size.width - viewSize) / 2
-        
-        drawInterfaceGame()
-        drawInterfacePlayerOptions(options: game.options)
         
         /*
         let test = GASSprite(imageNamed: "Spaceship")
@@ -74,7 +71,7 @@ class GameScene: SKScene {
         //test.y = 0
         //drawTest()
     }
-    
+    /*
     func drawInventory(container: GASContainer) {
         clearInterfaceButtons()
         if let inventoryView = self.inventoryView {
@@ -242,23 +239,11 @@ class GameScene: SKScene {
         self.inventoryView!.selected = nil
         self.drawPlayerInventoryOptions()
     }
-    
+    */
     func drawInterfaceGame() {
-        gameView = GASGameView(parent: self,
-                               size: CGSize(width: viewSize, height: viewSize),
-                               scale: viewScale)
-        gameView.drawScene()
-        
-        //let sceneYPos = (self.size.height / 2) - (viewSize / 2) - viewGap
-        gameView.position = CGPoint(x: viewGap, y: viewGap)
-        //gameView.view.anchorPoint = GASNodePivot.center
-        /*
-        let rectum = GASRectangle(rectOf: CGSize(width: 256, height: 96), radius: 8, color: UIColor.green, parent: nil, onTouch: nil)
-        let butt = GASButton(parent: self,
-                            shape: rectum, sprite: nil, text: "Arse-Biscuit", textColor: nil, font: UIFont(name: "Helvetica", size: 64 * viewScale), onTouch: { print("Arse")} )
-        butt.position = CGPoint(x: viewGap, y: viewGap * 2 + viewSize)
-        */
-        drawInterfacePlayerOptions(options: game.options)
+        gameInterface = GASInterfaceGame(parent: self)
+        gameInterface.gameView.drawScene()
+        inventoryInterface = GASInterfaceInventory(parent: self)
     }
     
     func clearInterfaceButtons() {
@@ -267,7 +252,7 @@ class GameScene: SKScene {
         }
         buttons = []
     }
-    
+    /*
     func drawInterfaceButton(parent: SKNode, position: CGPoint, text: String, onTouch: (() -> Void)?) {
         
         let buttonSize = CGSize(width: viewSize, height: buttonHeight * viewScale)
@@ -298,7 +283,8 @@ class GameScene: SKScene {
         }
         
     }
-    
+     */
+    /*
     func actionForOption(_ type: GASGameOptionType) -> (() -> Void)? {
         switch(type) {
         case .attack:       return {
@@ -312,12 +298,7 @@ class GameScene: SKScene {
             self.drawInterfacePlayerOptions(options: self.game.options)
             }
         case .travel:       return {
-            self.game.newScene()
-            self.game.newBattle()
-            self.game.evaluateBattle()
-            self.game.generateOptions()
-            self.gameView.drawScene()
-            self.drawInterfacePlayerOptions(options: self.game.options!)
+            GASEvent.new(GASSceneEvent(.newScene))
             }
         case .inventory:    return {
             self.drawPlayerInventory()
@@ -332,7 +313,7 @@ class GameScene: SKScene {
         //    return nil
         }
     }
-    
+    */
     /*func drawTest() {
         let buttonSide = 256 * viewScale
         let buttonSize = CGSize(width: buttonSide, height: buttonSide)
@@ -409,5 +390,135 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        if let event = GASEvent.current {
+            if event.eventId != lastEventId || !event.hold {
+                //NSLog("update: Trigger handleEvent")
+                handleEvent(event)
+            }
+        } else {
+            lastEventId = 0
+        }
+        
     }
+    
+    func handleEvent(_ event: GASEvent) {
+        if event is GASGameEvent {
+            handleGameEvent(event as! GASGameEvent)
+        } else if event is GASSceneEvent {
+            handleSceneEvent(event as! GASSceneEvent)
+        } else if event is GASBattleEvent {
+            handleBattleEvent(event as! GASBattleEvent)
+        } else {
+            NSLog("handleEvent: Missing event handler.")
+        }
+        lastEventId = event.eventId
+        
+        if !event.hold {
+            GASEvent.next()
+            if let nextEvent = GASEvent.current {
+                handleEvent(nextEvent)
+            }
+        }
+    }
+    
+    func handleGameEvent(_ event: GASGameEvent) {
+        NSLog("handleGameEvent: \(event.type)   id: \(event.eventId)")
+        switch(event.type) {
+        case .newGame:
+            
+            //game.newScene()
+            //game.newBattle()
+            //game.startBattle()
+            //game.generateOptions()
+            
+            viewSize = size.height * viewScreenShare
+            viewScale = viewSize / maxViewSize
+            viewGap = (size.width - viewSize) / 2
+            
+            drawInterfaceGame()
+            game.newScene()
+            //drawInterfacePlayerOptions(options: game.options)
+            //GASEvent.next()
+        case .showInventory:
+            break
+        case .showContainer:
+            break
+        case .showLoot:
+            break
+            
+        default:
+            NSLog("handleGameEvent: Missing event handler.")
+            break
+            
+        }
+    }
+    
+    func handleSceneEvent(_ event: GASSceneEvent) {
+        NSLog("handleSceneEvent: \(event.type)   id: \(event.eventId)")
+        switch(event.type) {
+        case .newScene:
+            //game.newScene()
+            gameInterface.gameView.drawScene()
+            //self.game.newBattle()
+            //self.game.evaluateBattle()
+            //self.game.generateOptions()
+            //self.gameView.drawScene()
+            //self.drawInterfacePlayerOptions(options: self.game.options!)
+            //GASEvent.next()
+        case .playerMakeMove:
+            gameInterface.generatePlayerOptions()
+        /*default:
+            NSLog("handleSceneEvent: Missing event handler.")
+            break
+         */
+        }
+    }
+    func handleBattleEvent(_ event: GASBattleEvent) {
+        NSLog("handleBattleEvent: \(event.type)   id: \(event.eventId)")
+        switch(event.type) {
+        case .battleStart:
+            break
+            
+        case .battleEnd:
+            break //game.endBattle()
+            
+        case .newTurnForPlayer:
+            gameInterface.generatePlayerOptions()
+            
+        case .newTurnForMonster:
+            gameInterface.generatePauseOptions()
+            
+        case .playerAttacks:
+            break //GASEvent.next()
+            
+        case .playerHitTarget:
+            break //GASEvent.next()
+            
+        case .playerMissTarget:
+            break //GASEvent.next()
+            
+        case .playerDies:
+            break
+            
+        case .monsterAttacks:
+            GASEvent.next()
+            
+        case .monsterHitTarget:
+            GASEvent.next()
+            
+        case .monsterMissTarget:
+            GASEvent.next()
+            
+        case .monsterDies:
+            gameInterface.gameView.drawMonsters()
+            GASEvent.next()
+        /*
+        default:
+            NSLog("handleBattleEvent: Missing event handler.")
+            break
+        */
+        }
+ 
+    }
+    
 }

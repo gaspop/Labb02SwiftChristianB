@@ -38,10 +38,10 @@ class GASGameView {
     
     var imageForScene : String? {
         switch(scene!.id) {
-        case GASScene.keyScene01: return "Scene01"
-        case GASScene.keyScene02: return "Scene02"
-        case GASScene.keyScene03: return "Scene03"
-        case GASScene.keyScene04: return "Test"
+        case GASScene.keyScene01: return "sceneBackground01"
+        case GASScene.keyScene02: return "sceneBackground02"
+        case GASScene.keyScene03: return "sceneBackground03"
+        case GASScene.keyScene04: return "sceneBackground04"
         default: NSLog("Error in GASGameView.imageForScene: missing case")
                  return nil
         }
@@ -70,6 +70,7 @@ class GASGameView {
     func drawMonsters() {
         for m in monsterSprites {
             m.removeFromParent()
+            m.removeAllActions()
         }
         
         monsterSprites = []
@@ -113,7 +114,18 @@ class GASGameView {
 
 func imageForMonster(_ type: GASMonsterType) -> String {
     switch (type) {
-    case .hoodlum: return "Jerk"
-    default: return "Jerk"
+    case .idiot:
+        return "monsterIdiot"
+    case .thug:
+        return "monsterThug"
+    case .jerk:
+        return "monsterJerk"
+    case .spider:
+        return "monsterSpider"
+    case .slime:
+        return "monsterSlime"
+    case .duck:
+        return "monsterDuck"
+    //default: return "monsterJerk"
     }
 }

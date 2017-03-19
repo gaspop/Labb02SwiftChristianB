@@ -17,3 +17,7 @@ func random(_ from: Int, _ to: Int) -> Int {
 func random(_ to: Int) -> Int {
     return random(0, to)
 }
+
+class UserInteraction {
+    static var isEnabled : Bool = true
+}
